@@ -10,7 +10,7 @@ type CompiledFunctionResult = {
 
 function createFunction (code, errors) {
   try {
-    return new Function(code)
+    return new Function(code) //new Function 就是用来创建函数的
   } catch (err) {
     errors.push({ err, code })
     return noop
@@ -30,13 +30,13 @@ export function createCompileToFunctionFn (compile: Function): Function {
     delete options.warn
 
     /* istanbul ignore if */
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production') { // 如果采用standalone的方式引用vue，可能会被浏览器内容安全策略拦截
       // detect possible CSP restriction
       try {
         new Function('return 1')
       } catch (e) {
         if (e.toString().match(/unsafe-eval|CSP/)) {
-          warn(
+          warn( // CSP参考：https://www.cnblogs.com/smartXiang/p/6929617.html
             'It seems you are using the standalone build of Vue.js in an ' +
             'environment with Content Security Policy that prohibits unsafe-eval. ' +
             'The template compiler cannot work in this environment. Consider ' +
@@ -75,7 +75,7 @@ export function createCompileToFunctionFn (compile: Function): Function {
     // turn code into functions
     const res = {}
     const fnGenErrors = []
-    res.render = createFunction(compiled.render, fnGenErrors)
+    res.render = createFunction(compiled.render, fnGenErrors) // compiled.render 是字符串形式的函数体
     res.staticRenderFns = compiled.staticRenderFns.map(code => {
       return createFunction(code, fnGenErrors)
     })
