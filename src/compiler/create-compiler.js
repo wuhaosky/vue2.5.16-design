@@ -47,7 +47,7 @@ export function createCompilerCreator (baseCompile: Function): Function {
       return compiled
     }
 
-    return {
+    return { // compile 函数生成的是字符串形式的代码，而 compileToFunctions 生成的才是真正可执行的代码
       compile,
       compileToFunctions: createCompileToFunctionFn(compile)
     }
