@@ -17,7 +17,7 @@ export const createCompiler = createCompilerCreator(function baseCompile (
     optimize(ast, options)
   }
   const code = generate(ast, options) // codegen根据给定的AST生成最终的目标平台的代码
-  return {
+  return { // 注意这里的渲染函数，都以字符串的形式存在，因为真正变成函数的过程是在 compileToFunctions 中使用 new Function() 来完成的
     ast,
     render: code.render,
     staticRenderFns: code.staticRenderFns
