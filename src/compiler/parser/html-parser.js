@@ -24,7 +24,7 @@ const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`)
 const doctype = /^<!DOCTYPE [^>]+>/i
 // #7298: escape - to avoid being pased as HTML comment when inlined in page
 const comment = /^<!\--/
-const conditionalComment = /^<!\[/
+const conditionalComment = /^<!\[/    // TODO: 条件注释应该这样写吧 /^<!--\[/
 
 let IS_REGEX_CAPTURING_BROKEN = false
 'x'.replace(/x(.)?/g, function (m, g) {
@@ -35,7 +35,7 @@ let IS_REGEX_CAPTURING_BROKEN = false
 export const isPlainTextElement = makeMap('script,style,textarea', true)
 const reCache = {}
 
-const decodingMap = {
+const decodingMap = { // 用来完成对 html 实体进行解码的
   '&lt;': '<',
   '&gt;': '>',
   '&quot;': '"',
@@ -50,7 +50,7 @@ const encodedAttrWithNewLines = /&(?:lt|gt|quot|amp|#10|#9);/g
 const isIgnoreNewlineTag = makeMap('pre,textarea', true)
 const shouldIgnoreFirstNewline = (tag, html) => tag && isIgnoreNewlineTag(tag) && html[0] === '\n'
 
-function decodeAttr (value, shouldDecodeNewlines) {
+function decodeAttr (value, shouldDecodeNewlines) { // 将 html 实体转为对应的字符 http://www.w3school.com.cn/html/html_entities.asp
   const re = shouldDecodeNewlines ? encodedAttrWithNewLines : encodedAttr
   return value.replace(re, match => decodingMap[match])
 }
