@@ -277,7 +277,7 @@ export function parseHTML (html, options) {
 
     if (pos >= 0) {
       // Close all the open elements, up the stack
-      for (let i = stack.length - 1; i >= pos; i--) {
+      for (let i = stack.length - 1; i >= pos; i--) { // 检测是否缺少闭合标签
         if (process.env.NODE_ENV !== 'production' &&
           (i > pos || !tagName) &&
           options.warn
@@ -293,8 +293,8 @@ export function parseHTML (html, options) {
 
       // Remove the open elements from the stack
       stack.length = pos
-      lastTag = pos && stack[pos - 1].tag
-    } else if (lowerCasedTagName === 'br') {
+      lastTag = pos && stack[pos - 1].tag  // 处理 stack 栈中剩余的标签
+    } else if (lowerCasedTagName === 'br') {  // 解析 </br> 与 </p> 标签，与浏览器的行为相同
       if (options.start) {
         options.start(tagName, [], true, start, end)
       }
