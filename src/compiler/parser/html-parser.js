@@ -61,11 +61,11 @@ export function parseHTML (html, options) {
   const isUnaryTag = options.isUnaryTag || no
   const canBeLeftOpenTag = options.canBeLeftOpenTag || no
   let index = 0
-  let last, lastTag
+  let last, lastTag // lastTag始终是栈顶元素
   while (html) {
     last = html
     // Make sure we're not in a plaintext content element like script/style
-    if (!lastTag || !isPlainTextElement(lastTag)) {
+    if (!lastTag || !isPlainTextElement(lastTag)) { // 非script/style这种纯文本标签
       let textEnd = html.indexOf('<')
       if (textEnd === 0) {
         // Comment:
@@ -126,18 +126,18 @@ export function parseHTML (html, options) {
           !startTagOpen.test(rest) &&
           !comment.test(rest) &&
           !conditionalComment.test(rest)
-        ) {
+        ) { // 说明符号 < 存在于普通文本中
           // < in plain text, be forgiving and treat it as text
           next = rest.indexOf('<', 1)
           if (next < 0) break
           textEnd += next
           rest = html.slice(textEnd)
         }
-        text = html.substring(0, textEnd)
+        text = html.substring(0, textEnd) // 这部分字符串将被作为普通字符串处理
         advance(textEnd)
       }
 
-      if (textEnd < 0) {
+      if (textEnd < 0) { // 就将整个 html 字符串作为文本处理就好了
         text = html
         html = ''
       }
@@ -145,7 +145,7 @@ export function parseHTML (html, options) {
       if (options.chars && text) {
         options.chars(text)
       }
-    } else {
+    } else { // script/style这种纯文本标签
       let endTagLength = 0
       const stackedTag = lastTag.toLowerCase()
       const reStackedTag = reCache[stackedTag] || (reCache[stackedTag] = new RegExp('([\\s\\S]*?)(</' + stackedTag + '[^>]*>)', 'i'))
@@ -169,9 +169,9 @@ export function parseHTML (html, options) {
       parseEndTag(stackedTag, index - endTagLength, index)
     }
 
-    if (html === last) {
+    if (html === last) { // 作为普通字符串处理
       options.chars && options.chars(html)
-      if (process.env.NODE_ENV !== 'production' && !stack.length && options.warn) {
+      if (process.env.NODE_ENV !== 'production' && !stack.length && options.warn) { // stack 栈为空代表着标签被处理完毕了，但此时仍然有剩余的字符串未处理
         options.warn(`Mal-formatted tag at end of template: "${html}"`)
       }
       break
@@ -190,9 +190,9 @@ export function parseHTML (html, options) {
     const start = html.match(startTagOpen)
     if (start) {
       const match = {
-        tagName: start[1],
-        attrs: [],
-        start: index
+        tagName: start[1], // 标签名
+        attrs: [], // 此标签包含的属性
+        start: index // 标签在html中开始的位置
       }
       advance(start[0].length)
       let end, attr
@@ -201,9 +201,9 @@ export function parseHTML (html, options) {
         match.attrs.push(attr)
       }
       if (end) {
-        match.unarySlash = end[1]
+        match.unarySlash = end[1] // 标识一元标签
         advance(end[0].length)
-        match.end = index
+        match.end = index // 标签在html中结束的位置
         return match
       }
     }
@@ -214,7 +214,7 @@ export function parseHTML (html, options) {
     const unarySlash = match.unarySlash
 
     if (expectHTML) {
-      if (lastTag === 'p' && isNonPhrasingTag(tagName)) {
+      if (lastTag === 'p' && isNonPhrasingTag(tagName)) { // TODO: 段落式内容 流式内容？
         parseEndTag(lastTag)
       }
       if (canBeLeftOpenTag(tagName) && lastTag === tagName) {
@@ -225,7 +225,7 @@ export function parseHTML (html, options) {
     const unary = isUnaryTag(tagName) || !!unarySlash
 
     const l = match.attrs.length
-    const attrs = new Array(l)
+    const attrs = new Array(l) // new Array可以直接生成指定长度的数组
     for (let i = 0; i < l; i++) {
       const args = match.attrs[i]
       // hackish work around FF bug https://bugzilla.mozilla.org/show_bug.cgi?id=369778
@@ -254,7 +254,16 @@ export function parseHTML (html, options) {
     }
   }
 
-  function parseEndTag (tagName, start, end) {
+/**
+  检测是否缺少闭合标签
+  处理 stack 栈中剩余的标签
+  解析 </br> 与 </p> 标签，与浏览器的行为相同
+ *
+ * @param {*} tagName
+ * @param {*} start
+ * @param {*} end
+ */
+function parseEndTag (tagName, start, end) {
     let pos, lowerCasedTagName
     if (start == null) start = index
     if (end == null) end = index
