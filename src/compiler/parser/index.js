@@ -116,7 +116,7 @@ export function parse (
     shouldKeepComment: options.comments,
     start (tag, attrs, unary) {
       // check namespace.
-      // inherit parent ns if there is one
+      // inherit parent ns if there is one   platformGetTagNamespace 函数只会获取 svg 和 math 这两个标签的命名空间，但这两个标签的所有子标签都会继承它们两个的命名空间。对于其他标签则不存在命名空间。
       const ns = (currentParent && currentParent.ns) || platformGetTagNamespace(tag)
 
       // handle IE svg bug
