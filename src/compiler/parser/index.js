@@ -213,7 +213,7 @@ export function parse (
           element.parent = currentParent
         }
       }
-      if (!unary) {
+      if (!unary) {  // 每当遇到一个非一元标签都会将该元素的描述对象添加到 stack 数组，并且 currentParent 始终存储的是 stack 栈顶的元素，即当前解析元素的父级。
         currentParent = element
         stack.push(element)
       } else {
