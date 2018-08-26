@@ -203,13 +203,13 @@ export function parse (
       }
       if (currentParent && !element.forbidden) {
         if (element.elseif || element.else) {
-          processIfConditions(element, currentParent)
+          processIfConditions(element, currentParent) // 如果标签使用了 v-else 或 v-else-if 指令，则该标签的元素描述对象会被添加到与之相符的带有 v-if 指令的元素描述对象的 ifConditions 数组中
         } else if (element.slotScope) { // scoped slot
           currentParent.plain = false
           const name = element.slotTarget || '"default"'
           ;(currentParent.scopedSlots || (currentParent.scopedSlots = {}))[name] = element
         } else {
-          currentParent.children.push(element)
+          currentParent.children.push(element) // 建立父子关系
           element.parent = currentParent
         }
       }
