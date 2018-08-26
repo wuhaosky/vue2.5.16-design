@@ -31,7 +31,7 @@ const modifierRE = /\.[^.]+/g
 
 const decodeHTMLCached = cached(he.decode)
 
-// configurable state
+// configurable state 8个平台化的变量
 export let warn: any
 let delimiters
 let transforms
@@ -65,24 +65,24 @@ export function parse (
   template: string,
   options: CompilerOptions
 ): ASTElement | void {
-  warn = options.warn || baseWarn
+  warn = options.warn || baseWarn // baseWarn 函数的作用无非就是通过 console.error 函数打印错误信息
 
-  platformIsPreTag = options.isPreTag || no
-  platformMustUseProp = options.mustUseProp || no
-  platformGetTagNamespace = options.getTagNamespace || no
+  platformIsPreTag = options.isPreTag || no // 通过给定的标签名字判断该标签是否是 pre 标签
+  platformMustUseProp = options.mustUseProp || no // 检测一个属性在标签中是否要使用元素对象原生的 prop 进行绑定
+  platformGetTagNamespace = options.getTagNamespace || no // 获取元素(标签)的命名空间
 
-  transforms = pluckModuleFunction(options.modules, 'transformNode')
-  preTransforms = pluckModuleFunction(options.modules, 'preTransformNode')
-  postTransforms = pluckModuleFunction(options.modules, 'postTransformNode')
+  transforms = pluckModuleFunction(options.modules, 'transformNode')  // [transformNode, transformNode]
+  preTransforms = pluckModuleFunction(options.modules, 'preTransformNode') // [preTransformNode]
+  postTransforms = pluckModuleFunction(options.modules, 'postTransformNode') // []
 
   delimiters = options.delimiters
 
   const stack = []
   const preserveWhitespace = options.preserveWhitespace !== false
   let root
-  let currentParent
-  let inVPre = false
-  let inPre = false
+  let currentParent // 描述对象之间的父子关系就是靠该变量进行联系的
+  let inVPre = false // inVPre 变量用来标识当前解析的标签是否在拥有 v-pre 的标签之内
+  let inPre = false // inPre 变量用来标识当前正在解析的标签是否在 <pre></pre> 标签之内
   let warned = false
 
   function warnOnce (msg) {
@@ -126,7 +126,7 @@ export function parse (
       }
 
       let element: ASTElement = createASTElement(tag, attrs, currentParent)
-      if (ns) {
+      if (ns) { // 如果当前解析的开始标签为 svg 标签或者 math 标签或者它们两个的子节点标签，都将会比其他 html 标签的元素描述对象多出一个 ns 属性，且该属性标识了该标签的命名空间。
         element.ns = ns
       }
 
@@ -140,7 +140,7 @@ export function parse (
       }
 
       // apply pre-transforms
-      for (let i = 0; i < preTransforms.length; i++) {
+      for (let i = 0; i < preTransforms.length; i++) { // preTransforms 数组中的那些函数与 process* 系列函数唯一的区别就是平台化的区分即可。
         element = preTransforms[i](element, options) || element
       }
 
@@ -164,7 +164,7 @@ export function parse (
         processElement(element, options)
       }
 
-      function checkRootConstraints (el) {
+      function checkRootConstraints (el) { // 必须有且仅有一个根元素
         if (process.env.NODE_ENV !== 'production') {
           if (el.tag === 'slot' || el.tag === 'template') {
             warnOnce(

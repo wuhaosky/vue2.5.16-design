@@ -18,7 +18,7 @@ const genStaticKeysCached = cached(genStaticKeys)
  *    create fresh nodes for them on each re-render;
  * 2. Completely skip them in the patching process.
  */
-export function optimize (root: ?ASTElement, options: CompilerOptions) {
+export function optimize (root: ?ASTElement, options: CompilerOptions) { // 我们在编译阶段可以把一些 AST 节点优化成静态节点，所以整个 optimize 的过程实际上就干 2 件事情，markStatic(root) 标记静态节点 ，markStaticRoots(root, false) 标记静态根。
   if (!root) return
   isStaticKey = genStaticKeysCached(options.staticKeys || '')
   isPlatformReservedTag = options.isReservedTag || no
