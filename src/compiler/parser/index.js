@@ -144,17 +144,17 @@ export function parse (
         element = preTransforms[i](element, options) || element
       }
 
-      if (!inVPre) {
-        processPre(element)
+      if (!inVPre) { // 当 inVPre 变量为真时，意味着后续的所有解析工作都处于 v-pre 环境下，编译器会跳过拥有 v-pre 指令元素以及其子元素的编译过程，所以后续的编译逻辑需要 inVPre 变量作为标识才行。
+        processPre(element) // 假如一个标签使用了 v-pre 指令，那么经过 processPre 函数处理之后，该元素描述对象的 .pre 属性值为 true
         if (element.pre) {
           inVPre = true
         }
       }
-      if (platformIsPreTag(element.tag)) {
+      if (platformIsPreTag(element.tag)) { // 判断当前元素是否是 <pre> 标签
         inPre = true
       }
       if (inVPre) {
-        processRawAttrs(element)
+        processRawAttrs(element) // 将该元素所有属性全部作为原生的属性(attr)处理
       } else if (!element.processed) {
         // structural directives
         processFor(element)
@@ -306,7 +306,7 @@ function processRawAttrs (el) {
         value: JSON.stringify(el.attrsList[i].value)
       }
     }
-  } else if (!el.pre) {
+  } else if (!el.pre) { // 该元素一定是使用了 v-pre 指令的标签的子标签
     // non root node in pre blocks with no attributes
     el.plain = true
   }
