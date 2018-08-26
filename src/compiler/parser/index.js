@@ -351,7 +351,7 @@ export function processFor (el: ASTElement) {
   if ((exp = getAndRemoveAttr(el, 'v-for'))) {
     const res = parseFor(exp)
     if (res) {
-      extend(el, res)
+      extend(el, res) // 使用 extend 函数将 res 常量中的属性混入当前元素的描述对象中
     } else if (process.env.NODE_ENV !== 'production') {
       warn(
         `Invalid v-for expression: ${exp}`
@@ -367,21 +367,21 @@ type ForParseResult = {
   iterator2?: string;
 };
 
-export function parseFor (exp: string): ?ForParseResult {
+export function parseFor (exp: string): ?ForParseResult { // 解析 v-for 指令的值，并创建一个包含解析结果的对象，最后将该对象返回。
   const inMatch = exp.match(forAliasRE)
   if (!inMatch) return
-  const res = {}
-  res.for = inMatch[2].trim()
-  const alias = inMatch[1].trim().replace(stripParensRE, '')
-  const iteratorMatch = alias.match(forIteratorRE)
+  const res = {}               // 假设exp是item in list 或者 (item, index) in list
+  res.for = inMatch[2].trim()  // res.for是list
+  const alias = inMatch[1].trim().replace(stripParensRE, '') // alias是item 或者 item, index
+  const iteratorMatch = alias.match(forIteratorRE) // iteratorMatch是null 或者 [', index', ' index']
   if (iteratorMatch) {
-    res.alias = alias.replace(forIteratorRE, '')
-    res.iterator1 = iteratorMatch[1].trim()
+    res.alias = alias.replace(forIteratorRE, '') // res.alias是item
+    res.iterator1 = iteratorMatch[1].trim() // res.iterator1是index
     if (iteratorMatch[2]) {
       res.iterator2 = iteratorMatch[2].trim()
     }
   } else {
-    res.alias = alias
+    res.alias = alias // res.alias是item
   }
   return res
 }
