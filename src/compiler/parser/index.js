@@ -202,9 +202,9 @@ export function parse (
         }
       }
       if (currentParent && !element.forbidden) {
-        if (element.elseif || element.else) {
-          processIfConditions(element, currentParent) // 如果标签使用了 v-else 或 v-else-if 指令，则该标签的元素描述对象会被添加到与之相符的带有 v-if 指令的元素描述对象的 ifConditions 数组中
-        } else if (element.slotScope) { // scoped slot
+        if (element.elseif || element.else) { // 当一个元素使用了 v-else-if 或 v-else 指令时，它们是不会作为父级元素子节点的，而是会被添加到相符的使用了 v-if 指令的元素描述对象的 ifConditions 数组中。
+          processIfConditions(element, currentParent)
+        } else if (element.slotScope) { // scoped slot 使用了 slot-scope 特性的元素来讲它们将被添加到父级元素描述对象的 scopedSlots 对象下
           currentParent.plain = false
           const name = element.slotTarget || '"default"'
           ;(currentParent.scopedSlots || (currentParent.scopedSlots = {}))[name] = element
