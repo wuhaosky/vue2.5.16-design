@@ -516,15 +516,15 @@ function processAttrs (el) {
   for (i = 0, l = list.length; i < l; i++) {
     name = rawName = list[i].name
     value = list[i].value
-    if (dirRE.test(name)) {
+    if (dirRE.test(name)) { // 1.指令属性 v- v-bind: : v-on @
       // mark element as dynamic
-      el.hasBindings = true
+      el.hasBindings = true // 当前节点是否拥有绑定
       // modifiers
       modifiers = parseModifiers(name)
       if (modifiers) {
         name = name.replace(modifierRE, '')
       }
-      if (bindRE.test(name)) { // v-bind
+      if (bindRE.test(name)) { // 1.1 v-bind指令
         name = name.replace(bindRE, '')
         value = parseFilters(value)
         isProp = false
@@ -552,10 +552,10 @@ function processAttrs (el) {
         } else {
           addAttr(el, name, value)
         }
-      } else if (onRE.test(name)) { // v-on
+      } else if (onRE.test(name)) { // 1.2 v-on指令
         name = name.replace(onRE, '')
         addHandler(el, name, value, modifiers, false, warn)
-      } else { // normal directives
+      } else { // 1.3 普通指令 normal directives
         name = name.replace(dirRE, '')
         // parse arg
         const argMatch = name.match(argRE)
@@ -568,7 +568,7 @@ function processAttrs (el) {
           checkForAliasModel(el, value)
         }
       }
-    } else {
+    } else { // 2.非指令属性
       // literal attribute
       if (process.env.NODE_ENV !== 'production') {
         const res = parseText(value, delimiters)
@@ -604,12 +604,12 @@ function checkInFor (el: ASTElement): boolean {
   return false
 }
 
-function parseModifiers (name: string): Object | void {
-  const match = name.match(modifierRE)
+function parseModifiers (name: string): Object | void { // 解析修饰符
+  const match = name.match(modifierRE)  // 例如name='@click.stop', match为['.stop']
   if (match) {
     const ret = {}
     match.forEach(m => { ret[m.slice(1)] = true })
-    return ret
+    return ret  // ret为{stop: true}
   }
 }
 

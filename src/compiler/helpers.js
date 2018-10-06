@@ -116,7 +116,14 @@ export function addHandler (
   } else {
     events[name] = newHandler
   }
-
+// "events": {
+//       "click": {
+//           "value": "onBtnClick",
+//           "modifiers": {
+//               "stop": true
+//           }
+//       }
+//   },
   el.plain = false
 }
 
