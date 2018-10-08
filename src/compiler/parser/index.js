@@ -583,6 +583,7 @@ function processAttrs (el) {
         }
       }
       // 对于任何非指令属性，都会使用 addAttr 函数将该属性与该属性对应的字符串值添加到元素描述对象的 el.attrs 数组中。
+      // 元素描述对象的 el.attrs 数组中所存储的任何属性都会在由虚拟DOM创建真实DOM的过程中使用 setAttribute 方法将属性添加到真实DOM元素上。
       addAttr(el, name, JSON.stringify(value)) // 让该属性的值当做一个纯字符串对待
       // #6887 firefox doesn't update muted state if set via attribute
       // even immediately after element creation
