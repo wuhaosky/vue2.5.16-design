@@ -570,6 +570,7 @@ function processAttrs (el) {
       }
     } else { // 2.非指令属性
       // literal attribute
+      // 检测是不是非指令属性的属性值使用了字面量表达式，如果是则打印信息，并建议使用绑定属性作为替代
       if (process.env.NODE_ENV !== 'production') {
         const res = parseText(value, delimiters)
         if (res) {
@@ -581,13 +582,14 @@ function processAttrs (el) {
           )
         }
       }
-      addAttr(el, name, JSON.stringify(value))
+      // 对于任何非指令属性，都会使用 addAttr 函数将该属性与该属性对应的字符串值添加到元素描述对象的 el.attrs 数组中。
+      addAttr(el, name, JSON.stringify(value)) // 让该属性的值当做一个纯字符串对待
       // #6887 firefox doesn't update muted state if set via attribute
       // even immediately after element creation
       if (!el.component &&
           name === 'muted' &&
           platformMustUseProp(el.tag, el.attrsMap.type, name)) {
-        addProp(el, name, 'true')
+        addProp(el, name, 'true') // 元素描述对象的 el.props 数组中所存储的任何属性都会在由虚拟DOM创建真实DOM的过程中直接使用真实DOM对象添加，也就是说对于 <video> 标签的 muted 属性的添加方式为：videoEl.muted = true。
       }
     }
   }
