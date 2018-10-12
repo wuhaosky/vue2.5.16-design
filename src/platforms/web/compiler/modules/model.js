@@ -30,12 +30,12 @@ function preTransformNode (el: ASTElement, options: CompilerOptions) {
       return
     }
 
-    let typeBinding
-    if (map[':type'] || map['v-bind:type']) {
+    let typeBinding // preTransformNode 函数要预处理的是使用了 v-model 属性并且使用了绑定的 type 属性的 input 标签。
+    if (map[':type'] || map['v-bind:type']) { // <input v-model="val" :type="inputType" />
       typeBinding = getBindingAttr(el, 'type')
     }
-    if (!map.type && !typeBinding && map['v-bind']) {
-      typeBinding = `(${map['v-bind']}).type`
+    if (!map.type && !typeBinding && map['v-bind']) { // <input v-model="val" v-bind="{ type: inputType }" />
+      typeBinding = `(${map['v-bind']}).type` // 相当于 typeBinding = `({ type: inputType }).type`
     }
 
     if (typeBinding) {
@@ -47,9 +47,9 @@ function preTransformNode (el: ASTElement, options: CompilerOptions) {
       const branch0 = cloneASTElement(el)
       // process for on the main node
       processFor(branch0)
-      addRawAttr(branch0, 'type', 'checkbox')
+      addRawAttr(branch0, 'type', 'checkbox') // 这么做就等价于把新克隆出来的标签视作：<input type="checkbox" />
       processElement(branch0, options)
-      branch0.processed = true // prevent it from double-processed
+      branch0.processed = true // prevent it from double-processed 标识着当前元素描述对象已经被处理过了
       branch0.if = `(${typeBinding})==='checkbox'` + ifConditionExtra
       addIfCondition(branch0, {
         exp: branch0.if,
