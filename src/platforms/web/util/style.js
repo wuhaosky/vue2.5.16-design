@@ -4,8 +4,8 @@ import { cached, extend, toObject } from 'shared/util'
 
 export const parseStyleText = cached(function (cssText) {
   const res = {}
-  const listDelimiter = /;(?![^(]*\))/g
-  const propertyDelimiter = /:(.+)/
+  const listDelimiter = /;(?![^(]*\))/g   // 负向先行断言 匹配; 
+  const propertyDelimiter = /:(.+)/   // 匹配:
   cssText.split(listDelimiter).forEach(function (item) {
     if (item) {
       var tmp = item.split(propertyDelimiter)

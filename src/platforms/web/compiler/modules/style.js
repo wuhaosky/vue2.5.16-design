@@ -24,7 +24,7 @@ function transformNode (el: ASTElement, options: CompilerOptions) {
         )
       }
     }
-    el.staticStyle = JSON.stringify(parseStyleText(staticStyle))
+    el.staticStyle = JSON.stringify(parseStyleText(staticStyle))   // parseStyleText 把 字符串形式样式转成对象形式
   }
 
   const styleBinding = getBindingAttr(el, 'style', false /* getStatic */)
