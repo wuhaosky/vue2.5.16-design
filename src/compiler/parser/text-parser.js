@@ -25,7 +25,7 @@ export function parseText (
   if (!tagRE.test(text)) {
     return
   }
-  const tokens = []
+  const tokens = [] // tokens 数组是用来给 weex 使用的
   const rawTokens = []
   let lastIndex = tagRE.lastIndex = 0
   let match, index, tokenValue
