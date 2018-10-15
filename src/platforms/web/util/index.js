@@ -11,7 +11,7 @@ export * from './element'
  */
 export function query (el: string | Element): Element {
   if (typeof el === 'string') {
-    const selected = document.querySelector(el)
+    const selected = document.querySelector(el) // 返回文档中匹配指定 CSS 选择器的第一个元素
     if (!selected) {
       process.env.NODE_ENV !== 'production' && warn(
         'Cannot find element: ' + el

@@ -22,7 +22,7 @@ Vue.prototype.$mount = function (
   el = el && query(el)
 
   /* istanbul ignore if */
-  if (el === document.body || el === document.documentElement) {
+  if (el === document.body || el === document.documentElement) { // 校验挂载元素是不是body和html
     process.env.NODE_ENV !== 'production' && warn(
       `Do not mount Vue to <html> or <body> - mount to normal elements instead.`
     )
@@ -35,7 +35,7 @@ Vue.prototype.$mount = function (
     let template = options.template
     if (template) {
       if (typeof template === 'string') {
-        if (template.charAt(0) === '#') {
+        if (template.charAt(0) === '#') { // 如果值以 # 开始，则它将被用作选择符，并使用匹配元素的 innerHTML 作为模板。
           template = idToTemplate(template)
           /* istanbul ignore if */
           if (process.env.NODE_ENV !== 'production' && !template) {
@@ -45,7 +45,7 @@ Vue.prototype.$mount = function (
             )
           }
         }
-      } else if (template.nodeType) {
+      } else if (template.nodeType) { // nodeType 属性返回以数字值返回指定节点的节点类型。如果节点是元素节点，则 nodeType 属性将返回 1；如果节点是属性节点，则 nodeType 属性将返回 2。
         template = template.innerHTML
       } else {
         if (process.env.NODE_ENV !== 'production') {
@@ -72,7 +72,7 @@ Vue.prototype.$mount = function (
       options.staticRenderFns = staticRenderFns
 
       /* istanbul ignore if */
-      if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
+      if (process.env.NODE_ENV !== 'production' && config.performance && mark) { // 记录编译性能
         mark('compile end')
         measure(`vue ${this._name} compile`, 'compile', 'compile end')
       }
