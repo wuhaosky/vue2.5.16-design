@@ -20,7 +20,7 @@ export const baseOptions: CompilerOptions = { // 编译器选项
   isUnaryTag,
   mustUseProp,
   canBeLeftOpenTag,
-  isReservedTag,
+  isReservedTag, // 校验是否是保留标签
   getTagNamespace,
-  staticKeys: genStaticKeys(modules)
+  staticKeys: genStaticKeys(modules) // 'staticClass,staticStyle'
 }

@@ -140,7 +140,8 @@ export function hasOwn (obj: Object | Array<*>, key: string): boolean {
 }
 
 /**
- * Create a cached version of a pure function.
+ * Create a cached version of a pure function. 为纯函数创建一个缓存版本的函数
+ * 对于相同的输入，我们只需执行一次并将结果缓存，当再次遇到相同的输入时，我们只需要从缓存中读取即可，这就是 cached 的目标。
  */
 export function cached<F: Function> (fn: F): F {
   const cache = Object.create(null)
@@ -259,6 +260,7 @@ export const identity = (_: any) => _
 
 /**
  * Generate a static keys string from compiler modules.
+ * 根据编译器(compiler)的 modules 生成一个静态键字符串。'staticClass,staticStyle'
  */
 export function genStaticKeys (modules: Array<ModuleOptions>): string {
   return modules.reduce((keys, m) => {
