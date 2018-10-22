@@ -22,9 +22,9 @@ export class CodegenState {
   constructor (options: CompilerOptions) {
     this.options = options
     this.warn = options.warn || baseWarn
-    this.transforms = pluckModuleFunction(options.modules, 'transformCode')
-    this.dataGenFns = pluckModuleFunction(options.modules, 'genData')
-    this.directives = extend(extend({}, baseDirectives), options.directives)
+    this.transforms = pluckModuleFunction(options.modules, 'transformCode') // null
+    this.dataGenFns = pluckModuleFunction(options.modules, 'genData') // [class的genData, style的genData]
+    this.directives = extend(extend({}, baseDirectives), options.directives)  // {on, bind, cloak, model, html, text}
     const isReservedTag = options.isReservedTag || no
     this.maybeComponent = (el: ASTElement) => !isReservedTag(el.tag)
     this.onceId = 0
@@ -224,6 +224,7 @@ export function genData (el: ASTElement, state: CodegenState): string {
     data += `tag:"${el.tag}",`
   }
   // module data generation functions
+  // 生成staticClass和class，staticStyle和style
   for (let i = 0; i < state.dataGenFns.length; i++) {
     data += state.dataGenFns[i](el)
   }
