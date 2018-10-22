@@ -86,6 +86,7 @@ export function genElement (el: ASTElement, state: CodegenState): string {
 }
 
 // hoist static sub-trees out
+// 处理静态根
 function genStatic (el: ASTElement, state: CodegenState): string {
   el.staticProcessed = true
   state.staticRenderFns.push(`with(this){return ${genElement(el, state)}}`)
@@ -196,6 +197,7 @@ export function genFor (
     '})'
 }
 
+// 处理指令和属性，使用{}包裹
 export function genData (el: ASTElement, state: CodegenState): string {
   let data = '{'
 
@@ -282,13 +284,7 @@ export function genData (el: ASTElement, state: CodegenState): string {
   return data
 }
 
-/**
- * 处理el.directives
- *
- * @param {ASTElement} el
- * @param {CodegenState} state
- * @returns {(string | void)}
- */
+// 处理el.directives
 function genDirectives (el: ASTElement, state: CodegenState): string | void {
   const dirs = el.directives
   if (!dirs) return
@@ -382,6 +378,7 @@ function genForScopedSlot (
     '})'
 }
 
+// 处理子元素
 export function genChildren (
   el: ASTElement,
   state: CodegenState,
@@ -404,7 +401,7 @@ export function genChildren (
       ? getNormalizationType(children, state.maybeComponent)
       : 0
     const gen = altGenNode || genNode
-    return `[${children.map(c => gen(c, state)).join(',')}]${
+    return `[${children.map(c => gen(c, state)).join(',')}]${   // 子元素使用[]包裹
       normalizationType ? `,${normalizationType}` : ''
     }`
   }
