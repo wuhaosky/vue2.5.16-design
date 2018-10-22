@@ -508,6 +508,6 @@ function generateValue (value) {
 // #3895, #4268
 function transformSpecialNewlines (text: string): string {
   return text
-    .replace(/\u2028/g, '\\u2028')
-    .replace(/\u2029/g, '\\u2029')
+    .replace(/\u2028/g, '\\u2028') //  \u2028 行分隔符
+    .replace(/\u2029/g, '\\u2029') //  \u2029 段落分隔符
 }
