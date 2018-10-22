@@ -201,6 +201,7 @@ export function genData (el: ASTElement, state: CodegenState): string {
 
   // directives first.
   // directives may mutate the el's other properties before they are generated.
+  // 先处理el.genDirectives，因为在处理el.genDirectives的过程中，会修改el的其它属性值。
   const dirs = genDirectives(el, state)
   if (dirs) data += dirs + ','
 
@@ -281,6 +282,13 @@ export function genData (el: ASTElement, state: CodegenState): string {
   return data
 }
 
+/**
+ * 处理el.directives
+ *
+ * @param {ASTElement} el
+ * @param {CodegenState} state
+ * @returns {(string | void)}
+ */
 function genDirectives (el: ASTElement, state: CodegenState): string | void {
   const dirs = el.directives
   if (!dirs) return
@@ -294,7 +302,7 @@ function genDirectives (el: ASTElement, state: CodegenState): string | void {
     if (gen) {
       // compile-time directive that manipulates AST.
       // returns true if it also needs a runtime counterpart.
-      needRuntime = !!gen(el, dir, state.warn)
+      needRuntime = !!gen(el, dir, state.warn) // gen对el.directives数组中的对象进行处理；只有input v-model指令，gen才返回true
     }
     if (needRuntime) {
       hasRuntime = true
