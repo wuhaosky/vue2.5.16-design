@@ -54,6 +54,14 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   Vue.options._base = Vue
 
   extend(Vue.options.components, builtInComponents)
+  // Vue.options = {
+  // 	components: {
+  // 		KeepAlive
+  // 	},
+  // 	directives: Object.create(null),
+  // 	filters: Object.create(null),
+  // 	_base: Vue
+  // }
 
   initUse(Vue)
   initMixin(Vue)

@@ -20,13 +20,14 @@ export function initMixin (Vue: Class<Component>) {
 
     let startTag, endTag
     /* istanbul ignore if */
+    // 组件初始化的性能追踪
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
       startTag = `vue-perf-start:${vm._uid}`
       endTag = `vue-perf-end:${vm._uid}`
       mark(startTag)
     }
 
-    // a flag to avoid this being observed
+    // a flag to avoid this being observed 避免该对象被响应系统观测
     vm._isVue = true
     // merge options
     if (options && options._isComponent) {
@@ -35,7 +36,7 @@ export function initMixin (Vue: Class<Component>) {
       // internal component options needs special treatment.
       initInternalComponent(vm, options)
     } else {
-      vm.$options = mergeOptions(
+      vm.$options = mergeOptions(  // vm.$options 是当前 Vue 实例的初始化选项，注意：这是经过 mergeOptions() 后的
         resolveConstructorOptions(vm.constructor),
         options || {},
         vm
