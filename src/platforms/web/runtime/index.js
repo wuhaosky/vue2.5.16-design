@@ -19,16 +19,30 @@ import { patch } from './patch'
 import platformDirectives from './directives/index'
 import platformComponents from './components/index'
 
-// install platform specific utils
+// install platform specific utils 安装平台特定的工具方法
 Vue.config.mustUseProp = mustUseProp
 Vue.config.isReservedTag = isReservedTag
 Vue.config.isReservedAttr = isReservedAttr
 Vue.config.getTagNamespace = getTagNamespace
 Vue.config.isUnknownElement = isUnknownElement
 
-// install platform runtime directives & components
+// install platform runtime directives & components 安装平台特定的指令和组件
 extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
+// 变为
+// Vue.options = {
+// 	components: {
+// 		KeepAlive,
+// 		Transition,
+// 		TransitionGroup
+// 	},
+// 	directives: {
+// 		model,
+// 		show
+// 	},
+// 	filters: Object.create(null),
+// 	_base: Vue
+// }
 
 // install platform patch function
 Vue.prototype.__patch__ = inBrowser ? patch : noop
@@ -47,6 +61,7 @@ Vue.prototype.$mount = function (
 if (inBrowser) {
   setTimeout(() => {
     if (config.devtools) {
+      // 是否安装了vue的chrome插件，没有安装则建议安装
       if (devtools) {
         devtools.emit('init', Vue)
       } else if (
