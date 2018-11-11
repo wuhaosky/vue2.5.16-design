@@ -253,14 +253,14 @@ function checkComponents (options: Object) {
 }
 
 export function validateComponentName (name: string) {
-  if (!/^[a-zA-Z][\w-]*$/.test(name)) {
+  if (!/^[a-zA-Z][\w-]*$/.test(name)) { // Vue 限定组件的名字由普通的字符和中横线(-)组成，且必须以字母开头。
     warn(
       'Invalid component name: "' + name + '". Component names ' +
       'can only contain alphanumeric characters and the hyphen, ' +
       'and must start with a letter.'
     )
   }
-  if (isBuiltInTag(name) || config.isReservedTag(name)) {
+  if (isBuiltInTag(name) || config.isReservedTag(name)) { // 检测注册的组件名字是否为内置的标签之外，还会检测是否是保留标签
     warn(
       'Do not use built-in or reserved HTML elements as component ' +
       'id: ' + name
@@ -282,7 +282,7 @@ function normalizeProps (options: Object, vm: ?Component) {
     while (i--) {
       val = props[i]
       if (typeof val === 'string') {
-        name = camelize(val)
+        name = camelize(val) // 中横线转驼峰
         res[name] = { type: null }
       } else if (process.env.NODE_ENV !== 'production') {
         warn('props must be strings when using array syntax.')
@@ -368,14 +368,15 @@ export function mergeOptions (
   vm?: Component
 ): Object {
   if (process.env.NODE_ENV !== 'production') {
-    checkComponents(child)
+    checkComponents(child) // 检查组件名称是否符合要求
   }
 
   if (typeof child === 'function') {
-    child = child.options
+    child = child.options // 允许合并另一个实例构造者的选项
   }
 
-  normalizeProps(child, vm)
+  // 无论开发者使用哪一种写法，在内部都将其规范成同一种方式，这样在选项合并的时候就能够统一处理
+  normalizeProps(child, vm) // 这个函数最终是将 props 规范为对象的形式了
   normalizeInject(child, vm)
   normalizeDirectives(child)
   const extendsFrom = child.extends
