@@ -25,6 +25,7 @@ export function initLifecycle (vm: Component) {
   const options = vm.$options
 
   // locate first non-abstract parent
+  // 将当前实例添加到父实例的 $children 属性里，并设置当前实例的 $parent 指向父实例
   let parent = options.parent
   if (parent && !options.abstract) {
     while (parent.$options.abstract && parent.$parent) {
