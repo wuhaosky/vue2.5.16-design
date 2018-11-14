@@ -44,7 +44,7 @@ export function initMixin (Vue: Class<Component>) {
     }
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
-      initProxy(vm)
+      initProxy(vm) // initProxy 的目的，就是设置渲染函数的作用域代理，其目的是为我们提供更好的提示信息。
     } else {
       vm._renderProxy = vm
     }
