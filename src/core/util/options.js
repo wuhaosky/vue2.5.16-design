@@ -44,6 +44,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 /**
  * Helper that recursively merges two data objects together.
+ * 递归地将两个数据对象合并在一起的助手。
  */
 function mergeData (to: Object, from: ?Object): Object {
   if (!from) return to
@@ -180,6 +181,7 @@ ASSET_TYPES.forEach(function (type) {
  *
  * Watchers hashes should not overwrite one
  * another, so we merge them as arrays.
+ * 如果父子选项都有相同的观测字段，将被合并为数组，这样观察者都将被执行。
  */
 strats.watch = function (
   parentVal: ?Object,
@@ -376,9 +378,9 @@ export function mergeOptions (
   }
 
   // 无论开发者使用哪一种写法，在内部都将其规范成同一种方式，这样在选项合并的时候就能够统一处理
-  normalizeProps(child, vm) // 这个函数最终是将 props 规范为对象的形式了
-  normalizeInject(child, vm)
-  normalizeDirectives(child)
+  normalizeProps(child, vm)  // 这个函数最终是将 props 规范为对象的形式了
+  normalizeInject(child, vm) // 这个函数最终是将 inject 规范为对象的形式了
+  normalizeDirectives(child) // 这个函数最终是将 directives 规范为对象的形式了
   const extendsFrom = child.extends
   if (extendsFrom) {
     parent = mergeOptions(parent, extendsFrom, vm)
@@ -389,6 +391,7 @@ export function mergeOptions (
     }
   }
   const options = {}
+  // 总之这两个 for in 循环的目的就是使用在 parent 或者 child 对象中出现的 key(即选项的名字) 作为参数调用 mergeField 函数，真正合并的操作实际在 mergeField 函数中。
   let key
   for (key in parent) {
     mergeField(key)
@@ -399,7 +402,7 @@ export function mergeOptions (
     }
   }
   function mergeField (key) {
-    const strat = strats[key] || defaultStrat
+    const strat = strats[key] || defaultStrat // 当一个选项没有对应的策略函数时，使用默认策略
     options[key] = strat(parent[key], child[key], vm, key)
   }
   return options
