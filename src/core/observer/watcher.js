@@ -47,11 +47,11 @@ export default class Watcher {
     options?: ?Object,
     isRenderWatcher?: boolean
   ) {
-    this.vm = vm
-    if (isRenderWatcher) {
+    this.vm = vm // 该属性指明了这个观察者是属于哪一个组件的
+    if (isRenderWatcher) { // 标识着是否是渲染函数的观察者
       vm._watcher = this
     }
-    vm._watchers.push(this)
+    vm._watchers.push(this) // 属于该组件实例的观察者都会被添加到该组件实例对象的 vm._watchers 数组中，包括渲染函数的观察者和非渲染函数的观察者
     // options
     if (options) {
       this.deep = !!options.deep
@@ -64,7 +64,7 @@ export default class Watcher {
     this.cb = cb
     this.id = ++uid // uid for batching
     this.active = true
-    this.dirty = this.lazy // for lazy watchers
+    this.dirty = this.lazy // for lazy watchers  计算属性是惰性求值
     this.deps = []
     this.newDeps = []
     this.depIds = new Set()
@@ -121,6 +121,7 @@ export default class Watcher {
 
   /**
    * Add a dependency to this directive.
+   * 观察者记录依赖收集器，依赖收集器收集观察者
    */
   addDep (dep: Dep) {
     const id = dep.id
@@ -140,8 +141,8 @@ export default class Watcher {
     let i = this.deps.length
     while (i--) {
       const dep = this.deps[i]
-      if (!this.newDepIds.has(dep.id)) {
-        dep.removeSub(this)
+      if (!this.newDepIds.has(dep.id)) { // 检查上一次求值所收集到的 Dep 实例对象是否存在于当前这次求值所收集到的 Dep 实例对象中
+        dep.removeSub(this) // 将该观察者对象从 Dep 实例对象中移除
       }
     }
     let tmp = this.depIds
@@ -157,14 +158,15 @@ export default class Watcher {
   /**
    * Subscriber interface.
    * Will be called when a dependency changes.
+   * 观测对象变化时调用
    */
   update () {
     /* istanbul ignore else */
-    if (this.lazy) {
+    if (this.lazy) { // 计算属性
       this.dirty = true
-    } else if (this.sync) {
+    } else if (this.sync) { // 同步更新变化
       this.run()
-    } else {
+    } else { // 异步更新变化
       queueWatcher(this)
     }
   }
@@ -176,7 +178,7 @@ export default class Watcher {
   run () {
     if (this.active) {
       const value = this.get()
-      if (
+      if ( // 实际上 if 语句块内的代码是为非渲染函数类型的观察者准备的，它用来对比新旧两次求值的结果，当值不相等的时候会调用通过参数传递进来的回调。
         value !== this.value ||
         // Deep watchers and watchers on Object/Arrays should fire even
         // when the value is the same, because the value may
