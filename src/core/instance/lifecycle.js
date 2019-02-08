@@ -190,7 +190,7 @@ export function mountComponent (
       measure(`vue ${name} patch`, startTag, endTag)
     }
   } else {
-    updateComponent = () => {
+    updateComponent = () => { // updateComponent的作用是把渲染函数生成的虚拟DOM渲染成真正的DOM
       vm._update(vm._render(), hydrating)
     }
   }
