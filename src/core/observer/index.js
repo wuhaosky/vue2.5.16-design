@@ -33,24 +33,25 @@ export function toggleObserving (value: boolean) {
  * object. Once attached, the observer converts the target
  * object's property keys into getter/setters that
  * collect dependencies and dispatch updates.
+ * 观察者附属于被观测的对象，观察者将被观测对象的属性转换成访问器属性，这样就可以收集依赖和触发更新。
  */
 export class Observer {
-  value: any;
-  dep: Dep;
+  value: any; // 被观测对象的引用
+  dep: Dep;   // 依赖收集器
   vmCount: number; // number of vms that has this object as root $data
 
   constructor (value: any) {
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
-    def(value, '__ob__', this)
-    if (Array.isArray(value)) {
+    def(value, '__ob__', this)  // 定义__ob__为被观测对象的属性，__ob__的Value是观察者，__ob__是不可枚举的
+    if (Array.isArray(value)) { // 如果被观测对象是数组
       const augment = hasProto
         ? protoAugment
         : copyAugment
       augment(value, arrayMethods, arrayKeys)
       this.observeArray(value)
-    } else {
+    } else {                    // 如果被观测对象是对象
       this.walk(value)
     }
   }
@@ -59,6 +60,7 @@ export class Observer {
    * Walk through each property and convert them into
    * getter/setters. This method should only be called when
    * value type is Object.
+   * 遍历所有属性，将它们转换成访问器属性。这个方法的入参obj只能是对象。
    */
   walk (obj: Object) {
     const keys = Object.keys(obj)
@@ -69,6 +71,7 @@ export class Observer {
 
   /**
    * Observe a list of Array items.
+   * 遍历数组，观测每一项item
    */
   observeArray (items: Array<any>) {
     for (let i = 0, l = items.length; i < l; i++) {
@@ -82,6 +85,7 @@ export class Observer {
 /**
  * Augment an target Object or Array by intercepting
  * the prototype chain using __proto__
+ * 变更目标对象或数组的原型
  */
 function protoAugment (target, src: Object, keys: any) {
   /* eslint-disable no-proto */
@@ -105,6 +109,7 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
  * Attempt to create an observer instance for a value,
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
+ * 为value创建Observer，并返回
  */
 export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
@@ -130,6 +135,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 
 /**
  * Define a reactive property on an Object.
+ * 在一个对象上定义响应式属性
  */
 export function defineReactive (
   obj: Object,
@@ -152,17 +158,17 @@ export function defineReactive (
   }
   const setter = property && property.set
 
-  let childOb = !shallow && observe(val)
+  let childOb = !shallow && observe(val) // 默认为深度观测
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
-      if (Dep.target) {
-        dep.depend()
+      if (Dep.target) { // 收集依赖
+        dep.depend() // 触发时机是当属性值被修改时触发，即在 set 函数中触发
         if (childOb) {
-          childOb.dep.depend()
-          if (Array.isArray(value)) {
+          childOb.dep.depend()  // __ob__ 属性以及 __ob__.dep 的主要作用是为了添加、删除属性时有能力触发依赖，而这就是 Vue.set 或 Vue.delete 的原理。
+          if (Array.isArray(value)) { // obj对象中的key是数组的情况 收集数组元素的依赖
             dependArray(value)
           }
         }
@@ -197,21 +203,24 @@ export function defineReactive (
  */
 export function set (target: Array<any> | Object, key: any, val: any): any {
   if (process.env.NODE_ENV !== 'production' &&
-    (isUndef(target) || isPrimitive(target))
+    (isUndef(target) || isPrimitive(target)) // 如果 set 函数的第一个参数是 undefined 或 null 或者是原始类型值，那么在非生产环境下会打印警告信息
   ) {
     warn(`Cannot set reactive property on undefined, null, or primitive value: ${(target: any)}`)
   }
+  // 数组
   if (Array.isArray(target) && isValidArrayIndex(key)) {
     target.length = Math.max(target.length, key)
     target.splice(key, 1, val)
     return val
   }
+  // 对象已存在的属性
   if (key in target && !(key in Object.prototype)) {
     target[key] = val
     return val
   }
+  // 给对象添加一个全新的属性
   const ob = (target: any).__ob__
-  if (target._isVue || (ob && ob.vmCount)) {
+  if (target._isVue || (ob && ob.vmCount)) { // 当使用 Vue.set/$set 函数为根数据对象添加属性时，是不被允许的。
     process.env.NODE_ENV !== 'production' && warn(
       'Avoid adding reactive properties to a Vue instance or its root $data ' +
       'at runtime - declare it upfront in the data option.'
@@ -222,7 +231,7 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
     target[key] = val
     return val
   }
-  defineReactive(ob.value, key, val)
+  defineReactive(ob.value, key, val) // 保证新添加的属性是响应式的
   ob.dep.notify()
   return val
 }
