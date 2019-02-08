@@ -33,7 +33,7 @@ export function toggleObserving (value: boolean) {
  * object. Once attached, the observer converts the target
  * object's property keys into getter/setters that
  * collect dependencies and dispatch updates.
- * 观察者附属于被观测的对象，观察者将被观测对象的属性转换成访问器属性，这样就可以收集依赖和触发更新。
+ * Observer对象附属于被观测的对象，观测函数将被观测对象的属性转换成访问器属性，这样就可以收集依赖和触发更新。
  */
 export class Observer {
   value: any; // 被观测对象的引用
@@ -44,7 +44,7 @@ export class Observer {
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
-    def(value, '__ob__', this)  // 定义__ob__为被观测对象的属性，__ob__的Value是观察者，__ob__是不可枚举的
+    def(value, '__ob__', this)  // 定义__ob__为被观测对象的属性，__ob__的Value是Observer对象，__ob__是不可枚举的
     if (Array.isArray(value)) { // 如果被观测对象是数组
       const augment = hasProto
         ? protoAugment
