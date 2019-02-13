@@ -123,10 +123,11 @@ function callActivatedHooks (queue) {
  * Push a watcher into the watcher queue.
  * Jobs with duplicate IDs will be skipped unless it's
  * pushed when the queue is being flushed.
+ * queueWatcher 函数的作用就是它将观察者放到一个队列中等待所有突变完成之后统一执行更新。
  */
 export function queueWatcher (watcher: Watcher) {
   const id = watcher.id
-  if (has[id] == null) {
+  if (has[id] == null) { // has 的作用就是用来避免将相同的观察者重复入队的
     has[id] = true
     if (!flushing) {
       queue.push(watcher)
@@ -137,12 +138,12 @@ export function queueWatcher (watcher: Watcher) {
       while (i > index && queue[i].id > watcher.id) {
         i--
       }
-      queue.splice(i + 1, 0, watcher)
+      queue.splice(i + 1, 0, watcher) // 保证观察者的执行顺序
     }
     // queue the flush
     if (!waiting) {
       waiting = true
-      nextTick(flushSchedulerQueue)
+      nextTick(flushSchedulerQueue) // flushSchedulerQueue 函数的作用之一就是用来将队列中的观察者统一执行更新的
     }
   }
 }
