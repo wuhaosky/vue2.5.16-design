@@ -6,7 +6,7 @@ import { handleError } from './error'
 import { isIOS, isNative } from './env'
 
 const callbacks = []
-let pending = false
+let pending = false // pending 的值设置为 false，代表着此时回调队列为空，不需要等待刷新
 
 function flushCallbacks () {
   pending = false
@@ -58,18 +58,18 @@ if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
 
 // Determine microtask defer implementation.
 /* istanbul ignore next, $flow-disable-line */
-if (typeof Promise !== 'undefined' && isNative(Promise)) {
+if (typeof Promise !== 'undefined' && isNative(Promise)) { // 检测当前宿主环境是否支持原生的 Promise，如果支持则优先使用 Promise 注册 microtask
   const p = Promise.resolve()
-  microTimerFunc = () => {
+  microTimerFunc = () => { // microTimerFunc 定义为一个函数，这个函数的执行将会把 flushCallbacks 函数注册为 microtask
     p.then(flushCallbacks)
     // in problematic UIWebViews, Promise.then doesn't completely break, but
     // it can get stuck in a weird state where callbacks are pushed into the
     // microtask queue but the queue isn't being flushed, until the browser
     // needs to do some other work, e.g. handle a timer. Therefore we can
     // "force" the microtask queue to be flushed by adding an empty timer.
-    if (isIOS) setTimeout(noop)
+    if (isIOS) setTimeout(noop) // 解决怪异问题的变通方法
   }
-} else {
+} else { // 降级处理，即注册 (macro)task
   // fallback to macro
   microTimerFunc = macroTimerFunc
 }
@@ -101,7 +101,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
     }
   })
   if (!pending) {
-    pending = true
+    pending = true  // pending 的值设置为 true，代表着此时回调队列不为空，正在等待刷新
     if (useMacroTask) {
       macroTimerFunc()
     } else {
