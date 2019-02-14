@@ -225,16 +225,16 @@ export default class Watcher {
    * Remove self from all dependencies' subscriber list.
    */
   teardown () {
-    if (this.active) {
+    if (this.active) { // 如果为假则说明该观察者已经不处于激活状态
       // remove self from vm's watcher list
       // this is a somewhat expensive operation so we skip it
       // if the vm is being destroyed.
-      if (!this.vm._isBeingDestroyed) {
-        remove(this.vm._watchers, this)
+      if (!this.vm._isBeingDestroyed) { // 为真说明该组件实例已经被销毁了，为假说明该组件还没有被销毁
+        remove(this.vm._watchers, this) // 将当前观察者实例从组件实例对象的 vm._watchers 数组中移除
       }
       let i = this.deps.length
       while (i--) {
-        this.deps[i].removeSub(this)
+        this.deps[i].removeSub(this) // 将当前观察者实例对象从所有的 Dep 实例对象中移除
       }
       this.active = false
     }

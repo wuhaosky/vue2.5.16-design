@@ -11,7 +11,7 @@ const seenObjects = new Set()
  * getters, so that every nested property inside the object
  * is collected as a "deep" dependency.
  */
-export function traverse (val: any) {
+export function traverse (val: any) { // 递归地读取被观察属性的所有子属性的值，这样被观察属性的所有子属性都将会收集到观察者，从而达到深度观测的目的
   _traverse(val, seenObjects)
   seenObjects.clear()
 }

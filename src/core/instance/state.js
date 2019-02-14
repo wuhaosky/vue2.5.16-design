@@ -348,12 +348,12 @@ export function stateMixin (Vue: Class<Component>) {
       return createWatcher(vm, expOrFn, cb, options)
     }
     options = options || {}
-    options.user = true
+    options.user = true // 这代表该观察者实例是用户创建的
     const watcher = new Watcher(vm, expOrFn, cb, options)
-    if (options.immediate) {
+    if (options.immediate) { // immediate 选项用来在属性或函数被侦听后立即执行回调
       cb.call(vm, watcher.value)
     }
-    return function unwatchFn () {
+    return function unwatchFn () { // $watch 函数返回一个函数，这个函数的执行会解除当前观察者对属性的观察。
       watcher.teardown()
     }
   }
