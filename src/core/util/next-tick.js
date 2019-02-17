@@ -86,7 +86,7 @@ export function withMacroTask (fn: Function): Function {
     return res
   })
 }
-
+// macrotask -> microtask -> 渲染 -> macrotask ...
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
   callbacks.push(() => {
@@ -105,11 +105,11 @@ export function nextTick (cb?: Function, ctx?: Object) {
     if (useMacroTask) {
       macroTimerFunc()
     } else {
-      microTimerFunc()
+      microTimerFunc() // 在 microtask 中把所有在UI重渲染之前需要更新的数据全部更新，这样只需要一次重渲染就能得到最新的DOM了。
     }
   }
   // $flow-disable-line
-  if (!cb && typeof Promise !== 'undefined') {
+  if (!cb && typeof Promise !== 'undefined') { // 如果入参没有cb，nextTick会返回一个promise，这个promise会在渲染后，resolve(ctx)
     return new Promise(resolve => {
       _resolve = resolve
     })
