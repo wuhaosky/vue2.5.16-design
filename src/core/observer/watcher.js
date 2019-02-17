@@ -31,7 +31,7 @@ export default class Watcher {
   user: boolean;
   lazy: boolean;
   sync: boolean;
-  dirty: boolean;
+  dirty: boolean; // dirty是缓存标识，true意味着没有缓存需要重新计算，false意味着有缓存不需要重新计算
   active: boolean;
   deps: Array<Dep>;
   newDeps: Array<Dep>;
@@ -163,7 +163,7 @@ export default class Watcher {
   update () {
     /* istanbul ignore else */
     if (this.lazy) { // 计算属性
-      this.dirty = true
+      this.dirty = true // 计算属性值缓存失效，需要重新计算
     } else if (this.sync) { // 同步更新变化
       this.run()
     } else { // 异步更新变化
@@ -208,7 +208,7 @@ export default class Watcher {
    */
   evaluate () {
     this.value = this.get()
-    this.dirty = false
+    this.dirty = false // 设置缓存标识
   }
 
   /**
