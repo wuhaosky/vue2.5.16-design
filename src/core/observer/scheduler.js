@@ -129,9 +129,9 @@ export function queueWatcher (watcher: Watcher) {
   const id = watcher.id
   if (has[id] == null) { // has 的作用就是用来避免将相同的观察者重复入队的
     has[id] = true
-    if (!flushing) {
+    if (!flushing) { // 正在刷新标识，true为正在刷新，false为此时没有刷新
       queue.push(watcher)
-    } else {
+    } else { // flushing 为真时，说明队列正在执行更新，这时如果有观察者入队则会执行 else 分支中的代码，这段代码的作用是为了保证观察者的执行顺序
       // if already flushing, splice the watcher based on its id
       // if already past its id, it will be run next immediately.
       let i = queue.length - 1
@@ -141,7 +141,7 @@ export function queueWatcher (watcher: Watcher) {
       queue.splice(i + 1, 0, watcher) // 保证观察者的执行顺序
     }
     // queue the flush
-    if (!waiting) {
+    if (!waiting) { // waiting为true需要等待，waiting为false不需要等待
       waiting = true
       nextTick(flushSchedulerQueue) // flushSchedulerQueue 函数的作用之一就是用来将队列中的观察者统一执行更新的
     }
