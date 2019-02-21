@@ -170,7 +170,7 @@ export function mountComponent (
   }
   callHook(vm, 'beforeMount')
 
-  let updateComponent
+  let updateComponent // 驱动视图更新的核心方法
   /* istanbul ignore if */
   if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
     updateComponent = () => {
