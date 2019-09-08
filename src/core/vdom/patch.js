@@ -135,6 +135,17 @@ export function createPatchFunction (backend) {
 
   let creatingElmInVPre = 0
 
+  /**
+   * 创建新节点
+   *
+   * @param {*} vnode
+   * @param {*} insertedVnodeQueue
+   * @param {*} parentElm
+   * @param {*} refElm
+   * @param {*} nested
+   * @param {*} ownerArray
+   * @param {*} index
+   */
   function createElm (
     vnode,
     insertedVnodeQueue,
@@ -503,6 +514,9 @@ export function createPatchFunction (backend) {
     }
   }
 
+  /**
+  * 检查是否有重复的key
+  */
   function checkDuplicateKeys (children) {
     const seenKeys = {}
     for (let i = 0; i < children.length; i++) {
@@ -521,6 +535,9 @@ export function createPatchFunction (backend) {
     }
   }
 
+  /**
+   * 在旧vnode数组中找到与目标node相同的vnode，并返回索引值
+   */
   function findIdxInOld (node, oldCh, start, end) {
     for (let i = start; i < end; i++) {
       const c = oldCh[i]
