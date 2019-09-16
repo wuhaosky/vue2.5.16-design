@@ -118,9 +118,9 @@ export function createComponent (
 
   const baseCtor = context.$options._base
 
-  // plain options object: turn it into a constructor
+  // plain options object: turn it into a constructor  Ctor是vue组件的构造函数
   if (isObject(Ctor)) {
-    Ctor = baseCtor.extend(Ctor)
+    Ctor = baseCtor.extend(Ctor) // Ctor vue组件的构造函数
   }
 
   // if at this stage it's not a constructor or an async component factory,
