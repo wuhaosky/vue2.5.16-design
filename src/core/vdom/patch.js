@@ -138,10 +138,10 @@ export function createPatchFunction (backend) {
   /**
    * 创建新节点
    *
-   * @param {*} vnode
+   * @param {*} vnode                 新的vnode对象
    * @param {*} insertedVnodeQueue
-   * @param {*} parentElm
-   * @param {*} refElm
+   * @param {*} parentElm             旧的vnode对象对应的dom的父dom
+   * @param {*} refElm                旧的vnode对象对应的dom的后一个兄弟dom
    * @param {*} nested
    * @param {*} ownerArray
    * @param {*} index
@@ -231,12 +231,21 @@ export function createPatchFunction (backend) {
     }
   }
 
+  /**
+  * 创建vue组件的dom
+  *
+  * @param {*} vnode                 新vnode对象
+  * @param {*} insertedVnodeQueue
+  * @param {*} parentElm             旧vnode对象对应dom的父dom
+  * @param {*} refElm                旧vnode对象对应dom的后一个兄弟dom
+  * @returns
+  */
   function createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {
     let i = vnode.data
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
       if (isDef(i = i.hook) && isDef(i = i.init)) {
-        i(vnode, false /* hydrating */, parentElm, refElm)
+        i(vnode, false /* hydrating */, parentElm, refElm) // 调用vue组件init钩子，生成vue组件实例，并赋值给vnode.componentInstance
       }
       // after calling the init hook, if the vnode is a child component
       // it should've created a child instance and mounted it. the child
@@ -802,7 +811,7 @@ export function createPatchFunction (backend) {
           // either not server-rendered, or hydration failed.
           // create an empty node and replace it
           // 如果不是服务端渲染或者合并到真实DOM失败，则创建一个空的VNode节点替换它
-          oldVnode = emptyNodeAt(oldVnode)
+          oldVnode = emptyNodeAt(oldVnode) // 把dom对象转成vnode对象
         }
 
         // replacing existing element

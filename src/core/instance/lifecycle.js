@@ -58,7 +58,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     const prevVnode = vm._vnode
     const prevActiveInstance = activeInstance
     activeInstance = vm
-    vm._vnode = vnode
+    vm._vnode = vnode // _vnode字段保存当前的vnode对象
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
     if (!prevVnode) {
