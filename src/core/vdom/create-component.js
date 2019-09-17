@@ -105,6 +105,17 @@ const componentVNodeHooks = {
 
 const hooksToMerge = Object.keys(componentVNodeHooks)
 
+/**
+ * 创建vue组件的vnode实例
+ *
+ * @export
+ * @param {(Class<Component> | Function | Object | void)} Ctor vue组件的选项对象
+ * @param {?VNodeData} data vue组件的data
+ * @param {Component} context vue实例
+ * @param {?Array<VNode>} children
+ * @param {string} [tag]
+ * @returns {(VNode | Array<VNode> | void)}
+ */
 export function createComponent (
   Ctor: Class<Component> | Function | Object | void,
   data: ?VNodeData,
@@ -120,7 +131,7 @@ export function createComponent (
 
   // plain options object: turn it into a constructor  Ctor是vue组件的构造函数
   if (isObject(Ctor)) {
-    Ctor = baseCtor.extend(Ctor) // Ctor vue组件的构造函数
+    Ctor = baseCtor.extend(Ctor) // 入参的Ctor是vue组件的选项对象，返回值的Ctor是vue组件的构造函数
   }
 
   // if at this stage it's not a constructor or an async component factory,
@@ -190,11 +201,11 @@ export function createComponent (
   }
 
   // install component management hooks onto the placeholder node
-  installComponentHooks(data)
+  installComponentHooks(data) // 安装组件钩子，这些钩子在patch阶段会使用到
 
   // return a placeholder vnode
   const name = Ctor.options.name || tag
-  const vnode = new VNode(
+  const vnode = new VNode( // new出vue组件的vnode实例，关键是Ctor，也就是vue组件的构造函数
     `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`,
     data, undefined, undefined, undefined, context,
     { Ctor, propsData, listeners, tag, children },
