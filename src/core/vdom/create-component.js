@@ -223,6 +223,16 @@ export function createComponent (
   return vnode
 }
 
+/**
+ * 根据vue组件的vnode创建组件实例
+ *
+ * @export
+ * @param {*} vnode
+ * @param {*} parent
+ * @param {?Node} [parentElm]
+ * @param {?Node} [refElm]
+ * @returns {Component}
+ */
 export function createComponentInstanceForVnode (
   vnode: any, // we know it's MountedComponentVNode but flow doesn't
   parent: any, // activeInstance in lifecycle state
