@@ -30,12 +30,12 @@ export function initMixin (Vue: Class<Component>) {
     // a flag to avoid this being observed 避免该对象被响应系统观测
     vm._isVue = true
     // merge options
-    if (options && options._isComponent) {
+    if (options && options._isComponent) { // VueComponent走此分支
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
       // internal component options needs special treatment.
       initInternalComponent(vm, options)
-    } else {
+    } else {                               // Vue走此分支
       vm.$options = mergeOptions(  // vm.$options 是当前 Vue 实例的初始化选项，注意：这是经过 mergeOptions() 后的
         resolveConstructorOptions(vm.constructor),
         options || {},
@@ -72,6 +72,13 @@ export function initMixin (Vue: Class<Component>) {
   }
 }
 
+/**
+ * 初始化VueComponent选项参数
+ *
+ * @export
+ * @param {Component} vm                      VueComponent 实例
+ * @param {InternalComponentOptions} options  VueComponent 选项参数
+ */
 export function initInternalComponent (vm: Component, options: InternalComponentOptions) {
   const opts = vm.$options = Object.create(vm.constructor.options)
   // doing this because it's faster than dynamic enumeration.
