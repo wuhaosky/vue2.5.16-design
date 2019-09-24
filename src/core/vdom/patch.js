@@ -216,6 +216,7 @@ export function createPatchFunction (backend) {
         if (isDef(data)) {
           invokeCreateHooks(vnode, insertedVnodeQueue)
         }
+        // 把生成的dom挂载到父元素上
         insert(parentElm, vnode.elm, refElm)
       }
 
