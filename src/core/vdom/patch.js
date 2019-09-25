@@ -214,6 +214,7 @@ export function createPatchFunction (backend) {
       } else {
         createChildren(vnode, children, insertedVnodeQueue)
         if (isDef(data)) {
+          // 调用所有module的create钩子
           invokeCreateHooks(vnode, insertedVnodeQueue)
         }
         // 把生成的dom挂载到父元素上
@@ -334,6 +335,12 @@ export function createPatchFunction (backend) {
     return isDef(vnode.tag)
   }
 
+  /**
+  * 调用所有module的create钩子
+  *
+  * @param {*} vnode
+  * @param {*} insertedVnodeQueue
+  */
   function invokeCreateHooks (vnode, insertedVnodeQueue) {
     for (let i = 0; i < cbs.create.length; ++i) {
       cbs.create[i](emptyNode, vnode)
