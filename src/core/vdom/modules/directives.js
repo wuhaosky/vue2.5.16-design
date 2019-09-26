@@ -92,7 +92,11 @@ function normalizeDirectives (
   vm: Component
 ): { [key: string]: VNodeDirective } {
   // dirs格式如下：
-  // [{name: "capture", rawName: "v-capture", modifiers: {…}, def: {inserted: ƒ}}]
+  // [{
+	// 		name: "capture",
+	// 		rawName: "v-capture.m1.m2",
+	// 		modifiers: {m1: true, m2: true}
+	// }]
   const res = Object.create(null)
   if (!dirs) {
     // $flow-disable-line
@@ -112,13 +116,12 @@ function normalizeDirectives (
   return res
   // res 格式如下：
   // {
-  //     v-capture: {
-  //       def: {inserted: ƒ}
-  //       modifiers: {}
-  //       name: "capture"
-  //       rawName: "v-capture"
-  //       __proto__: Object
-  //     }
+  //   "v-capture.m1.m2": {
+  //     def: {inserted: ƒ},
+  //     modifiers: {m1: true, m2: true},
+  //     name: "capture",
+  //     rawName: "v-capture.m1.m2"
+  //   }
   // }
 }
 
