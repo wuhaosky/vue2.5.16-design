@@ -33,7 +33,7 @@ function _update (oldVnode, vnode) {
     dir = newDirs[key]
     if (!oldDir) {
       // new directive, bind
-      callHook(dir, 'bind', vnode, oldVnode)
+      callHook(dir, 'bind', vnode, oldVnode) // bind钩子 在绑定到元素时调用，只调用一次
       if (dir.def && dir.def.inserted) {
         dirsWithInsert.push(dir)
       }
@@ -72,7 +72,7 @@ function _update (oldVnode, vnode) {
     for (key in oldDirs) {
       if (!newDirs[key]) {
         // no longer present, unbind
-        callHook(oldDirs[key], 'unbind', oldVnode, oldVnode, isDestroy)
+        callHook(oldDirs[key], 'unbind', oldVnode, oldVnode, isDestroy) // 只调用一次，指令与元素解绑时调用
       }
     }
   }
@@ -80,10 +80,19 @@ function _update (oldVnode, vnode) {
 
 const emptyModifiers = Object.create(null)
 
+/**
+ * 格式化directives
+ *
+ * @param {?Array<VNodeDirective>} dirs
+ * @param {Component} vm
+ * @returns {{ [key: string]: VNodeDirective }}
+ */
 function normalizeDirectives (
   dirs: ?Array<VNodeDirective>,
   vm: Component
 ): { [key: string]: VNodeDirective } {
+  // dirs格式如下：
+  // [{name: "capture", rawName: "v-capture", modifiers: {…}, def: {inserted: ƒ}}]
   const res = Object.create(null)
   if (!dirs) {
     // $flow-disable-line
@@ -97,10 +106,20 @@ function normalizeDirectives (
       dir.modifiers = emptyModifiers
     }
     res[getRawDirName(dir)] = dir
-    dir.def = resolveAsset(vm.$options, 'directives', dir.name, true)
+    dir.def = resolveAsset(vm.$options, 'directives', dir.name, true) // 自定义指令的钩子函数
   }
   // $flow-disable-line
   return res
+  // res 格式如下：
+  // {
+  //     v-capture: {
+  //       def: {inserted: ƒ}
+  //       modifiers: {}
+  //       name: "capture"
+  //       rawName: "v-capture"
+  //       __proto__: Object
+  //     }
+  // }
 }
 
 function getRawDirName (dir: VNodeDirective): string {
