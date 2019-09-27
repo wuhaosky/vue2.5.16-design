@@ -58,6 +58,13 @@ function updateAttrs (oldVnode: VNodeWithData, vnode: VNodeWithData) {
   }
 }
 
+/**
+ * 设置元素属性
+ *
+ * @param {Element} el
+ * @param {string} key
+ * @param {*} value
+ */
 function setAttr (el: Element, key: string, value: any) {
   if (el.tagName.indexOf('-') > -1) {
     baseSetAttr(el, key, value)
