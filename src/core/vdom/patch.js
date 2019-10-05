@@ -83,7 +83,14 @@ function createKeyToOldIdx (children, beginIdx, endIdx) {
 export function createPatchFunction (backend) {
   let i, j
   const cbs = {}
-
+  // cbs
+  // {
+  //   activate: [ƒ]
+  //   create: (8) [ƒ, ƒ, ƒ, ƒ, ƒ, ƒ, ƒ, ƒ]
+  //   destroy: (2) [ƒ, ƒ]
+  //   remove: [ƒ]
+  //   update: (7) [ƒ, ƒ, ƒ, ƒ, ƒ, ƒ, ƒ]
+  // }
   const { modules, nodeOps } = backend
 
   for (i = 0; i < hooks.length; ++i) {
