@@ -71,6 +71,7 @@ function updateStyle (oldVnode: VNodeWithData, vnode: VNodeWithData) {
     ? extend({}, style)
     : style
 
+  // 把父子组件的staticStyle和style 整合成一个对象赋值给newStyle
   const newStyle = getStyle(vnode, true)
 
   for (name in oldStyle) {
