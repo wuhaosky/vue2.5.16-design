@@ -6,7 +6,7 @@ import { mark, measure } from 'core/util/perf'
 
 import Vue from './runtime/index' // 导入运行时的vue
 import { query } from './util/index'
-import { compileToFunctions } from './compiler/index'
+import { compileToFunctions } from './compiler/index' // compileToFunctions的作用是把模板编译成render函数
 import { shouldDecodeNewlines, shouldDecodeNewlinesForHref } from './util/compat'
 
 const idToTemplate = cached(id => {

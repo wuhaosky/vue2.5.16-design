@@ -5,7 +5,7 @@ import { optimize } from './optimizer'
 import { generate } from './codegen/index'
 import { createCompilerCreator } from './create-compiler'
 
-// 编译器创建者的创建函数
+// 导出编译器，它是createCompilerCreator函数的返回值，编译器的作用是把模板编译成render函数
 // `createCompilerCreator` allows creating compilers that use alternative
 // parser/optimizer/codegen, e.g the SSR optimizing compiler.
 // Here we just export a default compiler using the default parts.
