@@ -2,26 +2,26 @@ declare type CompilerOptions = {
   warn?: Function; // allow customizing warning in different environments; e.g. node
   modules?: Array<ModuleOptions>; // platform specific modules; e.g. style; class
   directives?: { [key: string]: Function }; // platform specific directives
-  staticKeys?: string; // a list of AST properties to be considered static; for optimization
-  isUnaryTag?: (tag: string) => ?boolean; // check if a tag is unary for the platform
-  canBeLeftOpenTag?: (tag: string) => ?boolean; // check if a tag can be left opened
-  isReservedTag?: (tag: string) => ?boolean; // check if a tag is a native for the platform
-  preserveWhitespace?: boolean; // preserve whitespace between elements?
-  optimize?: boolean; // optimize static content?
+  staticKeys?: string; // a list of AST properties to be considered static; for optimization  "staticClass,staticStyle"
+  isUnaryTag?: (tag: string) => ?boolean; // check if a tag is unary for the platform    检查标签是不是一元标签，例如img
+  canBeLeftOpenTag?: (tag: string) => ?boolean; // check if a tag can be left opened    检查标签是不是左开标签，左开标签由浏览器自己闭合，例如p标签，可以<p>content</p>，也可以<p>content
+  isReservedTag?: (tag: string) => ?boolean; // check if a tag is a native for the platform    检查标签是否是平台的原生标签
+  preserveWhitespace?: boolean; // preserve whitespace between elements?     是否保留空白符
+  optimize?: boolean; // optimize static content?     是否优化静态内容
 
   // web specific
-  mustUseProp?: (tag: string, type: ?string, name: string) => boolean; // check if an attribute should be bound as a property
-  isPreTag?: (attr: string) => ?boolean; // check if a tag needs to preserve whitespace
-  getTagNamespace?: (tag: string) => ?string; // check the namespace for a tag
-  expectHTML?: boolean; // only false for non-web builds
+  mustUseProp?: (tag: string, type: ?string, name: string) => boolean; // check if an attribute should be bound as a property    检测一个属性在标签中是否要使用 props 进行绑定
+  isPreTag?: (attr: string) => ?boolean; // check if a tag needs to preserve whitespace     检查标签是否是 'pre' 标签
+  getTagNamespace?: (tag: string) => ?string; // check the namespace for a tag   获取元素(标签)的命名空间
+  expectHTML?: boolean; // only false for non-web builds  true
   isFromDOM?: boolean;
   shouldDecodeTags?: boolean;
-  shouldDecodeNewlines?:  boolean;
-  shouldDecodeNewlinesForHref?: boolean;
+  shouldDecodeNewlines?:  boolean;         // 对浏览器的怪癖做兼容
+  shouldDecodeNewlinesForHref?: boolean;  // 对浏览器的怪癖做兼容
 
   // runtime user-configurable
-  delimiters?: [string, string]; // template delimiters
-  comments?: boolean; // preserve comments in template
+  delimiters?: [string, string]; // template delimiters    模板分隔符
+  comments?: boolean; // preserve comments in template   是否保留注释内容
 
   // for ssr optimization compiler
   scopeId?: string;
