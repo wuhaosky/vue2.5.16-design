@@ -48,7 +48,7 @@ export function createCompileToFunctionFn (compile: Function): Function {
     }
 
     // check cache 已编译过，并且模板未变动，则直接从缓存中取编译结果
-    const key = options.delimiters
+    const key = options.delimiters  // 默认值：["{{", "}}"]
       ? String(options.delimiters) + template
       : template
     if (cache[key]) {

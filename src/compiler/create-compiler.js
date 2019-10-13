@@ -38,7 +38,7 @@ export function createCompilerCreator (baseCompile: Function): Function {
           }
         }
       }
-
+      // 关键代码
       const compiled = baseCompile(template, finalOptions)
       if (process.env.NODE_ENV !== 'production') {
         errors.push.apply(errors, detectErrors(compiled.ast))
