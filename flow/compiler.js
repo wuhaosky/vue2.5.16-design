@@ -10,7 +10,7 @@ declare type CompilerOptions = {
   optimize?: boolean; // optimize static content?     是否优化静态内容
 
   // web specific
-  mustUseProp?: (tag: string, type: ?string, name: string) => boolean; // check if an attribute should be bound as a property    检测一个属性在标签中是否要使用 props 进行绑定
+  mustUseProp?: (tag: string, type: ?string, name: string) => boolean; // check if an attribute should be bound as a property    检测一个属性在标签中是否要使用 prop 进行绑定
   isPreTag?: (attr: string) => ?boolean; // check if a tag needs to preserve whitespace     检查标签是否是 'pre' 标签
   getTagNamespace?: (tag: string) => ?string; // check the namespace for a tag   获取元素(标签)的命名空间
   expectHTML?: boolean; // only false for non-web builds  true

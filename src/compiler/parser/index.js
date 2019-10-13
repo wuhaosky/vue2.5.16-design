@@ -59,6 +59,7 @@ export function createASTElement (
 }
 
 /**
+ * 把模板解析成AST
  * Convert HTML string to AST.
  */
 export function parse (
@@ -67,8 +68,8 @@ export function parse (
 ): ASTElement | void {
   warn = options.warn || baseWarn // baseWarn 函数的作用无非就是通过 console.error 函数打印错误信息
 
-  platformIsPreTag = options.isPreTag || no // 通过给定的标签名字判断该标签是否是 pre 标签
-  platformMustUseProp = options.mustUseProp || no // 检测一个属性在标签中是否要使用元素对象原生的 prop 进行绑定
+  platformIsPreTag = options.isPreTag || no // 检查标签是否是 'pre' 标签
+  platformMustUseProp = options.mustUseProp || no // 检测一个属性在标签中是否要使用 prop 进行绑定
   platformGetTagNamespace = options.getTagNamespace || no // 获取元素(标签)的命名空间
 
   transforms = pluckModuleFunction(options.modules, 'transformNode')  // [transformNode, transformNode]
