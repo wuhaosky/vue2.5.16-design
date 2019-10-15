@@ -301,6 +301,7 @@ function processPre (el) {
   }
 }
 
+// 将v-pre元素和所有子元素的属性全部作为原生的属性(attr)处理，并赋值给attrs
 function processRawAttrs (el) {
   const l = el.attrsList.length
   if (l) {
@@ -311,7 +312,7 @@ function processRawAttrs (el) {
         value: JSON.stringify(el.attrsList[i].value)
       }
     }
-  } else if (!el.pre) { // 该元素一定是使用了 v-pre 指令的标签的子标签
+  } else if (!el.pre) { // v-pre元素和所有子元素如果没有属性，则设置plain为true
     // non root node in pre blocks with no attributes
     el.plain = true
   }
