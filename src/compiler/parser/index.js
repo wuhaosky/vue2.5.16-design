@@ -292,7 +292,10 @@ export function parse (
   return root
 }
 
+// 处理v-pre属性
+// 如果元素含有v-pre属性，则元素对应的ASTElement对象的pre属性设置为true
 function processPre (el) {
+  // 获取v-pre属性的值，并删除el的attrsList数组中的name属性为v-pre的元素
   if (getAndRemoveAttr(el, 'v-pre') != null) {
     el.pre = true
   }
