@@ -618,6 +618,17 @@ function parseModifiers (name: string): Object | void { // 解析修饰符
   }
 }
 
+/**
+attrs格式：
+[{
+  name:"class"
+  value:"app"
+}]
+attrsMap格式：
+{
+  class:"app"
+}
+ */
 function makeAttrsMap (attrs: Array<Object>): Object {
   const map = {}
   for (let i = 0, l = attrs.length; i < l; i++) {
