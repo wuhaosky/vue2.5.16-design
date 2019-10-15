@@ -182,12 +182,13 @@ export function parse (
         }
       }
 
-      // tree management
+      // tree management  根元素处理，原则就是只有一个根元素
       if (!root) {
         root = element
         checkRootConstraints(root)
       } else if (!stack.length) {
         // allow root elements with v-if, v-else-if and v-else
+        // 如果根元素有v-if，且其兄弟元素含有v-else-if或者 v-else，这样也是被允许的
         if (root.if && (element.elseif || element.else)) {
           checkRootConstraints(element)
           addIfCondition(root, {
