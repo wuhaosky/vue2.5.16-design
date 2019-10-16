@@ -19,15 +19,15 @@ import {
   pluckModuleFunction
 } from '../helpers'
 
-export const onRE = /^@|^v-on:/
-export const dirRE = /^v-|^@|^:/
-export const forAliasRE = /([^]*?)\s+(?:in|of)\s+([^]*)/
+export const onRE = /^@|^v-on:/    // 以@开头 或者 以v-on:开头
+export const dirRE = /^v-|^@|^:/   // 以v-开头 或者 以@开头 或者 以:开头
+export const forAliasRE = /([^]*?)\s+(?:in|of)\s+([^]*)/   // 匹配 1."(item, index) in data"  2."obj of list" 3."(value, key, index) in object"
 export const forIteratorRE = /,([^,\}\]]*)(?:,([^,\}\]]*))?$/
-const stripParensRE = /^\(|\)$/g
+const stripParensRE = /^\(|\)$/g   // 带括号，以(开头 或者以)结尾
 
-const argRE = /:(.*)$/
-export const bindRE = /^:|^v-bind:/
-const modifierRE = /\.[^.]+/g
+const argRE = /:(.*)$/               // 匹配 :value
+export const bindRE = /^:|^v-bind:/  // 匹配绑定属性 以:开头 或 以v-bind:开头
+const modifierRE = /\.[^.]+/g        // 匹配修饰符 .stop
 
 const decodeHTMLCached = cached(he.decode)
 
