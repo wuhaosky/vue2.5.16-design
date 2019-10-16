@@ -292,8 +292,10 @@ export function parse (
   return root
 }
 
-// 处理v-pre属性
-// 如果元素含有v-pre属性，则元素对应的ASTElement对象的pre属性设置为true
+/**
+  处理v-pre属性
+  如果元素含有v-pre属性，则元素对应的ASTElement对象的pre属性设置为true
+ */
 function processPre (el) {
   // 获取v-pre属性的值，并删除el的attrsList数组中的name属性为v-pre的元素
   if (getAndRemoveAttr(el, 'v-pre') != null) {
@@ -301,7 +303,9 @@ function processPre (el) {
   }
 }
 
-// 将v-pre元素和所有子元素的属性全部作为原生的属性(attr)处理，并赋值给attrs
+/**
+  将v-pre元素和所有子元素的属性全部作为原生的属性(attr)处理，并赋值给attrs
+ */
 function processRawAttrs (el) {
   const l = el.attrsList.length
   if (l) {
@@ -352,6 +356,9 @@ function processRef (el) {
   }
 }
 
+/**
+
+ */
 export function processFor (el: ASTElement) {
   let exp
   if ((exp = getAndRemoveAttr(el, 'v-for'))) {
