@@ -357,7 +357,11 @@ function processRef (el) {
 }
 
 /**
-
+  解析v-for指令，(item, key, index) in list，把如下属性混入ASTElement中
+  for: 'list',
+  alias: 'item',
+  iterator1: 'key',
+  iterator2: 'index'
  */
 export function processFor (el: ASTElement) {
   let exp
@@ -380,6 +384,18 @@ type ForParseResult = {
   iterator2?: string;
 };
 
+/**
+exp形如：
+(item, key, index) in list
+
+则返回值res，则为：
+{
+  for: 'list',
+  alias: 'item',
+  iterator1: 'key',
+  iterator2: 'index'
+}
+ */
 export function parseFor (exp: string): ?ForParseResult { // 解析 v-for 指令的值，并创建一个包含解析结果的对象，最后将该对象返回。
   const inMatch = exp.match(forAliasRE)
   if (!inMatch) return
@@ -399,6 +415,9 @@ export function parseFor (exp: string): ?ForParseResult { // 解析 v-for 指令
   return res
 }
 
+/**
+
+ */
 function processIf (el) {
   const exp = getAndRemoveAttr(el, 'v-if')
   if (exp) {
