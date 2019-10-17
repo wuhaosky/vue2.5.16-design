@@ -416,7 +416,11 @@ export function parseFor (exp: string): ?ForParseResult { // 解析 v-for 指令
 }
 
 /**
-
+形如：
+v-if="showCondition == 1"
+v-else-if="showCondition == 2"
+v-else
+执行这个函数，会在ASTElement元素上增加ifConditions属性，当然也增加if/elseif/else属性。
  */
 function processIf (el) {
   const exp = getAndRemoveAttr(el, 'v-if')
@@ -437,6 +441,9 @@ function processIf (el) {
   }
 }
 
+/**
+当一个元素使用了 v-else-if 或 v-else 指令时，它们是不会作为父级元素子节点的，而是会被添加到相符的使用了 v-if 指令的元素描述对象的 ifConditions 数组中。
+ */
 function processIfConditions (el, parent) {
   const prev = findPrevElement(parent.children)
   if (prev && prev.if) {
@@ -452,6 +459,9 @@ function processIfConditions (el, parent) {
   }
 }
 
+/**
+返回children的最后一个ASTElement元素
+ */
 function findPrevElement (children: Array<any>): ASTElement | void {
   let i = children.length
   while (i--) {
@@ -469,6 +479,9 @@ function findPrevElement (children: Array<any>): ASTElement | void {
   }
 }
 
+/**
+ * 为ASTElement增加ifConditions属性
+ */
 export function addIfCondition (el: ASTElement, condition: ASTIfCondition) {
   if (!el.ifConditions) {
     el.ifConditions = []
