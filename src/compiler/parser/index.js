@@ -568,7 +568,7 @@ function processComponent (el) {
 }
 
 /**
- *
+ * 解析属性
  */
 function processAttrs (el) {
   const list = el.attrsList
