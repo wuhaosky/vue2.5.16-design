@@ -53,6 +53,7 @@ export function addHandler (
   warn?: Function
 ) {
   modifiers = modifiers || emptyObject
+  // passive和prevent冲突，不能同时绑定在一个监听器上
   // warn prevent and passive modifier
   /* istanbul ignore if */
   if (
@@ -116,7 +117,7 @@ export function addHandler (
   } else {
     events[name] = newHandler
   }
-// "events": {
+// "el.events": {
 //       "click": {
 //           "value": "onBtnClick",
 //           "modifiers": {

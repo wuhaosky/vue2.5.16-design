@@ -630,7 +630,7 @@ function processAttrs (el) {
       }
     } else { // 2.非指令属性
       // literal attribute
-      // 检测是不是非指令属性的属性值使用了字面量表达式，如果是则打印信息，并建议使用绑定属性作为替代
+      // 检测是不是非指令属性的属性值使用了插值，如果是则打印信息，并建议使用绑定属性作为替代
       if (process.env.NODE_ENV !== 'production') {
         const res = parseText(value, delimiters)
         if (res) {
