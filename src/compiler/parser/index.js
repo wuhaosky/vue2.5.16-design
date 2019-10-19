@@ -20,7 +20,7 @@ import {
 } from '../helpers'
 
 export const onRE = /^@|^v-on:/    // 以@开头 或者 以v-on:开头
-export const dirRE = /^v-|^@|^:/   // 以v-开头 或者 以@开头 或者 以:开头
+export const dirRE = /^v-|^@|^:/   // 指令正则 以v-开头 或者 以@开头 或者 以:开头
 export const forAliasRE = /([^]*?)\s+(?:in|of)\s+([^]*)/   // 匹配 1."(item, index) in data"  2."obj of list" 3."(value, key, index) in object"
 export const forIteratorRE = /,([^,\}\]]*)(?:,([^,\}\]]*))?$/
 const stripParensRE = /^\(|\)$/g   // 带括号，以(开头 或者以)结尾
@@ -327,7 +327,7 @@ export function processElement (element: ASTElement, options: CompilerOptions) {
 
   // determine whether this is a plain element after
   // removing structural attributes
-  element.plain = !element.key && !element.attrsList.length
+  element.plain = !element.key && !element.attrsList.length  // 讲解静态优化和代码生成时我们会看到 plain 属性的作用
 
   processRef(element)
   processSlot(element)
@@ -338,6 +338,9 @@ export function processElement (element: ASTElement, options: CompilerOptions) {
   processAttrs(element)
 }
 
+/**
+ * 解析key属性
+ */
 function processKey (el) {
   const exp = getBindingAttr(el, 'key')
   if (exp) {
@@ -348,6 +351,9 @@ function processKey (el) {
   }
 }
 
+/**
+ * 解析ref属性
+ */
 function processRef (el) {
   const ref = getBindingAttr(el, 'ref')
   if (ref) {
@@ -548,6 +554,9 @@ function processSlot (el) {
   }
 }
 
+/**
+ * 处理动态组件is属性 inline-template属性
+ */
 function processComponent (el) {
   let binding
   if ((binding = getBindingAttr(el, 'is'))) {
@@ -558,6 +567,9 @@ function processComponent (el) {
   }
 }
 
+/**
+ *
+ */
 function processAttrs (el) {
   const list = el.attrsList
   let i, l, name, rawName, value, modifiers, isProp
@@ -644,6 +656,9 @@ function processAttrs (el) {
   }
 }
 
+/**
+ * 检查当前元素以及所有父元素是否含有v-for属性
+ */
 function checkInFor (el: ASTElement): boolean {
   let parent = el
   while (parent) {
@@ -655,6 +670,9 @@ function checkInFor (el: ASTElement): boolean {
   return false
 }
 
+/**
+ * 解析指令的修饰符
+ */
 function parseModifiers (name: string): Object | void { // 解析修饰符
   const match = name.match(modifierRE)  // 例如name='@click.stop', match为['.stop']
   if (match) {
@@ -720,6 +738,9 @@ function guardIESVGBug (attrs) {
   return res
 }
 
+/**
+ * 检查v-model绑定的是不是v-for的迭代器的值
+ */
 function checkForAliasModel (el, value) {
   let _el = el
   while (_el) {
