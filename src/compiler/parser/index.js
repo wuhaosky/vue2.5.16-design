@@ -93,6 +93,9 @@ export function parse (
     }
   }
 
+  /**
+   * 变量重置，执行后置处理
+   */
   function closeElement (element) {
     // check pre state
     if (element.pre) {
@@ -225,12 +228,12 @@ export function parse (
 
     end () {
       // remove trailing whitespace
-      const element = stack[stack.length - 1]
+      const element = stack[stack.length - 1]  // element是当前解析的元素
       const lastNode = element.children[element.children.length - 1]
-      if (lastNode && lastNode.type === 3 && lastNode.text === ' ' && !inPre) {
+      if (lastNode && lastNode.type === 3 && lastNode.text === ' ' && !inPre) { // 如果当前元素最后一个子节点是空白，则移除
         element.children.pop()
       }
-      // pop stack
+      // pop stack 将当前元素从stack栈中移除
       stack.length -= 1
       currentParent = stack[stack.length - 1]
       closeElement(element)
