@@ -3,7 +3,7 @@
 import { cached } from 'shared/util'
 import { parseFilters } from './filter-parser'
 
-const defaultTagRE = /\{\{((?:.|\n)+?)\}\}/g
+const defaultTagRE = /\{\{((?:.|\n)+?)\}\}/g    // 匹配模板插值的正则
 const regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g
 
 const buildRegex = cached(delimiters => {
@@ -33,7 +33,7 @@ export function parseText (
   if (!tagRE.test(text)) {
     return
   }
-  const tokens = [] // tokens 数组是用来给 weex 使用的
+  const tokens = [] //
   const rawTokens = []
   let lastIndex = tagRE.lastIndex = 0
   let match, index, tokenValue
@@ -55,7 +55,27 @@ export function parseText (
     tokens.push(JSON.stringify(tokenValue))
   }
   return {
-    expression: tokens.join('+'),
-    tokens: rawTokens
+    expression: tokens.join('+'),  // 生成render函数使用
+    tokens: rawTokens  // 记号流
   }
 }
+
+// 例子：
+// 这是插值{{ msg + avg}}示{{msg2}}例
+// {
+//     "type": 2,
+//     "expression": "\"这是插值\"+_s(msg + avg)+\"示\"+_s(msg2)+\"例\"",
+//     "tokens": [
+//         "这是插值",
+//         {
+//             "@binding": "msg + avg"
+//         },
+//         "示",
+//         {
+//             "@binding": "msg2"
+//         },
+//         "例"
+//     ],
+//     "text": "这是插值{{ msg + avg}}示{{msg2}}例",
+//     "static": false
+// }
