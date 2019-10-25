@@ -1,6 +1,6 @@
 /* @flow */
 
-import he from 'he'
+import he from 'he'  // html实体 编码/解码器
 import { parseHTML } from './html-parser'
 import { parseText } from './text-parser'
 import { parseFilters } from './filter-parser'
@@ -242,11 +242,11 @@ export function parse (
     chars (text: string) {
       if (!currentParent) {
         if (process.env.NODE_ENV !== 'production') {
-          if (text === template) {
+          if (text === template) {            // <template>text</template>
             warnOnce(
               'Component template requires a root element, rather than just text.'
             )
-          } else if ((text = text.trim())) {
+          } else if ((text = text.trim())) {  // <template><div></div>text</template>
             warnOnce(
               `text "${text}" outside root element will be ignored.`
             )
@@ -255,6 +255,7 @@ export function parse (
         return
       }
       // IE textarea placeholder bug
+      // issue: https://github.com/vuejs/vue/issues/4098
       /* istanbul ignore if */
       if (isIE &&
         currentParent.tag === 'textarea' &&
@@ -269,14 +270,14 @@ export function parse (
         : preserveWhitespace && children.length ? ' ' : ''
       if (text) {
         let res
-        if (!inVPre && text !== ' ' && (res = parseText(text, delimiters))) {
+        if (!inVPre && text !== ' ' && (res = parseText(text, delimiters))) { // 模板插值，例如：这是插值{{ msg }}示例
           children.push({
             type: 2,
             expression: res.expression,
             tokens: res.tokens,
             text
           })
-        } else if (text !== ' ' || !children.length || children[children.length - 1].text !== ' ') {
+        } else if (text !== ' ' || !children.length || children[children.length - 1].text !== ' ') { // 普通文本节点
           children.push({
             type: 3,
             text
