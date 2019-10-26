@@ -23,6 +23,13 @@ import {
   createASTElement
 } from 'compiler/parser/index'
 
+/**
+ * preTransformNode 函数要预处理的是使用了 v-model 属性并且使用了绑定的 type 属性的 input 标签。
+ *
+ * @param {ASTElement} el
+ * @param {CompilerOptions} options
+ * @returns
+ */
 function preTransformNode (el: ASTElement, options: CompilerOptions) {
   if (el.tag === 'input') {
     const map = el.attrsMap
@@ -38,7 +45,7 @@ function preTransformNode (el: ASTElement, options: CompilerOptions) {
       typeBinding = `(${map['v-bind']}).type` // 相当于 typeBinding = `({ type: inputType }).type`
     }
 
-    if (typeBinding) {
+    if (typeBinding) { // type是绑定的，而不是固定的
       const ifCondition = getAndRemoveAttr(el, 'v-if', true)
       const ifConditionExtra = ifCondition ? `&&(${ifCondition})` : ``
       const hasElse = getAndRemoveAttr(el, 'v-else', true) != null
