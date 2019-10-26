@@ -45,7 +45,7 @@ function preTransformNode (el: ASTElement, options: CompilerOptions) {
       typeBinding = `(${map['v-bind']}).type` // 相当于 typeBinding = `({ type: inputType }).type`
     }
 
-    if (typeBinding) { // type是绑定的，而不是固定的
+    if (typeBinding) { // 如果type是绑定的，而不是固定的，则执行下面代码块
       const ifCondition = getAndRemoveAttr(el, 'v-if', true)
       const ifConditionExtra = ifCondition ? `&&(${ifCondition})` : ``
       const hasElse = getAndRemoveAttr(el, 'v-else', true) != null
