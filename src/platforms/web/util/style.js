@@ -2,9 +2,18 @@
 
 import { cached, extend, toObject } from 'shared/util'
 
+/**
+  把字符串形式格式化为对象形式
+  <div style="color: red; background: green;"></div>
+  'color: red; background: green;'
+  {
+    color: 'red',
+    background: 'green'
+  }
+*/
 export const parseStyleText = cached(function (cssText) {
   const res = {}
-  const listDelimiter = /;(?![^(]*\))/g   // 负向先行断言 匹配; 
+  const listDelimiter = /;(?![^(]*\))/g   // 负向先行断言 匹配;
   const propertyDelimiter = /:(.+)/   // 匹配:
   cssText.split(listDelimiter).forEach(function (item) {
     if (item) {
