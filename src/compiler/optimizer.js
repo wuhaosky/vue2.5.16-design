@@ -82,8 +82,8 @@ function markStatic (node: ASTNode) {
 
 /**
  * 标记静态根
-1、自身为静态节点，并且有子节点，
-2、子节点不能仅为一个文本节点
+1、自身为静态节点，并且有多个子节点，
+2、或者只有一个子节点但不是文本节点
  *
  * @param {ASTNode} node
  * @param {boolean} isInFor
@@ -96,8 +96,8 @@ function markStaticRoots (node: ASTNode, isInFor: boolean) {
     // For a node to qualify as a static root, it should have children that
     // are not just static text. Otherwise the cost of hoisting out will
     // outweigh the benefits and it's better off to just always render it fresh.
-    // 要使节点符合静态根的条件，节点必须要有子节点，并且子节点不能只是静态文本。否则，标记静态节点的成本高于获得的收益。
-    if (node.static && node.children.length && !( // 如果是静态节点, 有不止一个子节点, 或者有一个子节点但不是文本节点, 就标记为静态根
+    // 要使节点符合静态根的条件，节点必须要有多个子节点，或者只有一个子节点但不能是文本节点。否则，标记静态节点的成本高于获得的收益。
+    if (node.static && node.children.length && !( // 如果是静态节点, 有多个子节点, 或者只有一个子节点但不是文本节点, 就标记为静态根
       node.children.length === 1 &&
       node.children[0].type === 3
     )) {
