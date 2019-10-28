@@ -85,7 +85,7 @@ export function genElement (el: ASTElement, state: CodegenState): string {
   }
 }
 
-// hoist static sub-trees out
+// hoist static sub-trees out  提升静态子树
 // 处理静态根
 function genStatic (el: ASTElement, state: CodegenState): string {
   el.staticProcessed = true
