@@ -143,7 +143,7 @@ function isStatic (node: ASTNode): boolean {
 }
 
 /**
- * 不是 template 标签的直接子元素并且没有包含在 for 循环中
+ * 是 template 标签的直接子元素，并且包含在 for 循环中
  *
  * @param {ASTElement} node
  * @returns {boolean}
