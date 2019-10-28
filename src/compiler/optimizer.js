@@ -1,4 +1,5 @@
 /* @flow */
+// 参考文章：https://blog.csdn.net/tcy83/article/details/88880620
 
 import { makeMap, isBuiltInTag, cached, no } from 'shared/util'
 
@@ -52,7 +53,7 @@ function markStatic (node: ASTNode) {
     // do not make component slot content static. this avoids
     // 1. components not able to mutate slot nodes
     // 2. static slot content fails for hot-reloading
-    if (                                       // TODO: 这段代码没看懂
+    if (
       !isPlatformReservedTag(node.tag) &&      // 节点是组件
       node.tag !== 'slot' &&                   // 并 节点标签不是slot
       node.attrsMap['inline-template'] == null // 并 节点不含inline-template属性
@@ -81,6 +82,8 @@ function markStatic (node: ASTNode) {
 
 /**
  * 标记静态根
+1、自身为静态节点，并且有子节点，
+2、子节点不能仅为一个文本节点
  *
  * @param {ASTNode} node
  * @param {boolean} isInFor
@@ -130,17 +133,17 @@ function isStatic (node: ASTNode): boolean {
     return true
   }
   return !!(node.pre || ( // 有v-pre指令
-    !node.hasBindings && // no dynamic bindings
-    !node.if && !node.for && // not v-if or v-for or v-else
-    !isBuiltInTag(node.tag) && // not a built-in 不是内置组件
-    isPlatformReservedTag(node.tag) && // not a component
-    !isDirectChildOfTemplateFor(node) && // 非带有 v-for 的 template 标签的直接子节点
-    Object.keys(node).every(isStaticKey) // 节点的所有属性的 key 都满足静态 key
+    !node.hasBindings && // 无动态绑定
+    !node.if && !node.for && // 没有 v-if 和 v-for
+    !isBuiltInTag(node.tag) && // 不是内置的标签，内置的标签有slot和component
+    isPlatformReservedTag(node.tag) && // 是平台保留标签(html和svg标签)
+    !isDirectChildOfTemplateFor(node) && // 不是 template 标签的直接子元素并且没有包含在 for 循环中
+    Object.keys(node).every(isStaticKey) // 结点包含的属性只能有isStaticKey中指定的几个
   ))
 }
 
 /**
- * 带有 v-for 的 template 标签的直接子节点
+ * 不是 template 标签的直接子元素并且没有包含在 for 循环中
  *
  * @param {ASTElement} node
  * @returns {boolean}
