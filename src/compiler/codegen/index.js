@@ -181,7 +181,7 @@ export function genFor (
     el.tag !== 'slot' &&
     el.tag !== 'template' &&
     !el.key
-  ) {
+  ) { // 如果是组件含有v-for指令，且没有指定key，则打印如下警告
     state.warn(
       `<${el.tag} v-for="${alias} in ${exp}">: component lists rendered with ` +
       `v-for should have explicit keys. ` +
@@ -195,6 +195,10 @@ export function genFor (
     `function(${alias}${iterator1}${iterator2}){` +
       `return ${(altGen || genElement)(el, state)}` +
     '})'
+
+  // 示例：
+  // <my-component v-for="(item, index) in list" >123</my-component>
+  // _l((list),function(item,index){return _c('my-component',[_v("123")])})
 }
 
 // 处理指令和属性，使用{}包裹
