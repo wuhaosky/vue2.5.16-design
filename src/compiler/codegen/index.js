@@ -85,8 +85,15 @@ export function genElement (el: ASTElement, state: CodegenState): string {
   }
 }
 
-// hoist static sub-trees out  提升静态子树
-// 处理静态根
+/**
+  生成静态根（el.staticRoot为true）对应的字符串
+  例如：
+  <div>
+    <span>123</span>
+  </div>
+  返回的字符串为：_m(0)
+  并往生成器选项上添加staticRenderFns属性：["with(this){return _c('div',[_c('span',[_v(\"123\")])])}"]
+ */
 function genStatic (el: ASTElement, state: CodegenState): string {
   el.staticProcessed = true
   state.staticRenderFns.push(`with(this){return ${genElement(el, state)}}`)
@@ -165,6 +172,12 @@ function genIfConditions (
   }
 }
 
+/**
+  生成含有v-for指令的元素所对应的字符串
+  示例：
+  <my-component v-for="(item, index) in list" >123</my-component>
+  _l((list),function(item,index){return _c('my-component',[_v("123")])})
+*/
 export function genFor (
   el: any,
   state: CodegenState,
@@ -195,10 +208,6 @@ export function genFor (
     `function(${alias}${iterator1}${iterator2}){` +
       `return ${(altGen || genElement)(el, state)}` +
     '})'
-
-  // 示例：
-  // <my-component v-for="(item, index) in list" >123</my-component>
-  // _l((list),function(item,index){return _c('my-component',[_v("123")])})
 }
 
 // 处理指令和属性，使用{}包裹
