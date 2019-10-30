@@ -104,7 +104,33 @@ function genStatic (el: ASTElement, state: CodegenState): string {
   })`
 }
 
-// v-once
+/**
+  例子1：
+  <span v-once>123</span>
+  生成的render字符串是：
+  with(this){return _m(0)}
+  生成的staticRenderFns字符串是：
+  ["with(this){return _c('span',[_v(\"123\")])}"]
+
+  例子2：
+  <span v-if="isShow" v-once>123</span>
+  <span v-else>456</span>
+  生成的render字符串是：
+  with(this){return (isShow)?_m(0):_c('span',[_v("456")])}
+  生成的staticRenderFns字符串是：
+  ["with(this){return _c('span',[_v(\"123\")])}"]
+
+  例子3：
+  <span v-if="isShow" v-once>123</span>
+  <span v-else v-once>456</span>
+  生成的render字符串是：
+  with(this){return (isShow)?_m(0):_m(1)}
+  生成的staticRenderFns字符串是：
+  [
+      "with(this){return _c('span',[_v(\"123\")])}",
+      "with(this){return _c('span',[_v(\"456\")])}"
+  ]
+ */
 function genOnce (el: ASTElement, state: CodegenState): string {
   el.onceProcessed = true
   if (el.if && !el.ifProcessed) {
