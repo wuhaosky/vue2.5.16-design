@@ -157,6 +157,18 @@ function genOnce (el: ASTElement, state: CodegenState): string {
   }
 }
 
+/**
+  例子1：
+  <span v-if="isShow">123</span>
+  生成的render字符串是：
+  with(this){return (isShow)?_c('span',[_v("123")]):_e()}
+
+  例子2：
+  <span v-if="isShow">123</span>
+  <span v-else>456</span>
+  生成的render字符串是：
+  with(this){return (isShow)?_c('span',[_v("123")]):_c('span',[_v("456")])}
+ */
 export function genIf (
   el: any,
   state: CodegenState,
