@@ -49,6 +49,9 @@ export function generate (
   }
 }
 
+/**
+ * 生成元素对应的字符串
+ */
 export function genElement (el: ASTElement, state: CodegenState): string {
   if (el.staticRoot && !el.staticProcessed) {
     return genStatic(el, state)
@@ -429,7 +432,16 @@ function genForScopedSlot (
     '})'
 }
 
-// 处理子元素
+/**
+  生成含有Children的元素所对应的字符串
+  示例：
+  <template>
+    <div>123</div>
+    <div>456</div>
+  </template>
+  生成的render字符串是：
+  with(this){return [_c('div',[_v("123")]),_v(" "),_c('div',[_v("456")])]}
+*/
 export function genChildren (
   el: ASTElement,
   state: CodegenState,
@@ -489,6 +501,9 @@ function needsNormalization (el: ASTElement): boolean {
   return el.for !== undefined || el.tag === 'template' || el.tag === 'slot'
 }
 
+/**
+ * 生成节点对应的字符串
+ */
 function genNode (node: ASTNode, state: CodegenState): string {
   if (node.type === 1) {
     return genElement(node, state)
@@ -499,6 +514,9 @@ function genNode (node: ASTNode, state: CodegenState): string {
   }
 }
 
+/**
+ * 生成模板插值对应的字符串
+ */
 export function genText (text: ASTText | ASTExpression): string {
   return `_v(${text.type === 2
     ? text.expression // no need for () because already wrapped in _s()
@@ -506,6 +524,9 @@ export function genText (text: ASTText | ASTExpression): string {
   })`
 }
 
+/**
+ * 生成文本对应的字符串
+ */
 export function genComment (comment: ASTText): string {
   return `_e(${JSON.stringify(comment.text)})`
 }
