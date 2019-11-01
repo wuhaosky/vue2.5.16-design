@@ -531,6 +531,15 @@ export function genComment (comment: ASTText): string {
   return `_e(${JSON.stringify(comment.text)})`
 }
 
+/**
+  生成slot标签所对应的字符串
+  示例：
+  <slot>
+    123
+  </slot>
+  生成的render字符串是：
+  with(this){return _t("default",[_v("\n123\n")])}
+ */
 function genSlot (el: ASTElement, state: CodegenState): string {
   const slotName = el.slotName || '"default"'
   const children = genChildren(el, state)
