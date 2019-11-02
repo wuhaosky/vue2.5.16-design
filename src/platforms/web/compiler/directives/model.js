@@ -62,6 +62,57 @@ export default function model (
   return true
 }
 
+/**
+  示例：
+  <input type="checkbox"  v-model="food"/>
+  执行genSelect后，更新el.events属性：
+  "el.events": {
+    "change": function($event){
+      var $$a = food, $$el = $event.target, $$c = $$el.checked ? (true) : (false);
+      if (Array.isArray($$a)) {
+        var $$v = null, $$i = _i($$a, $$v);
+        if ($$el.checked) {
+          $$i < 0 && (food = $$a.concat([$$v]))
+        } else {
+          $$i > -1 && (food = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+        }
+      } else {
+        food = $$c
+      }
+    }
+  },
+  生成的render字符串：
+  with(this){
+    return _c(
+      'input',
+      {
+        directives: [{
+          name: "model",
+          rawName: "v-model",
+          value: (food),
+          expression: "food"
+        }],
+        attrs: {"type": "checkbox"},
+        domProps: {"checked": Array.isArray(food) ? _i(food, null) > -1: (food)},
+        on: {
+          "change": function($event){
+            var $$a = food, $$el = $event.target, $$c = $$el.checked ? (true) : (false);
+            if (Array.isArray($$a)) {
+              var $$v = null, $$i = _i($$a, $$v);
+              if ($$el.checked) {
+                $$i < 0 && (food = $$a.concat([$$v]))
+              } else {
+                $$i > -1 && (food = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+              }
+            } else {
+              food = $$c
+            }
+          }
+        }
+      }
+    )
+  }
+ */
 function genCheckboxModel (
   el: ASTElement,
   value: string,
@@ -112,12 +163,12 @@ function genRadioModel (
   </select>
   执行genSelect后，更新el.events属性：
   "el.events": {
-      "change": {
-          "value": "function($event){
-            var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o){return o.selected}).map(function(o){var val = "_value" in o ? o._value : o.value;return val});
-            city = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-          }"
-      }
+    "change": {
+        "value": "function($event){
+          var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o){return o.selected}).map(function(o){var val = "_value" in o ? o._value : o.value;return val});
+          city = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+        }"
+    }
   },
   生成的render字符串：
   with(this){
