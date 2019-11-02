@@ -558,7 +558,13 @@ function genSlot (el: ASTElement, state: CodegenState): string {
   return res + ')'
 }
 
-// componentName is el.component, take it as argument to shun flow's pessimistic refinement
+/**
+  生成component标签所对应的字符串
+  示例：
+  <component is="my" shop="1" :deal="dealId">123</component>
+  生成的render字符串是：
+  with(this){return _c("my",{tag:"component",attrs:{"shop":"1","deal":dealId}},[_v("123")])}
+ */
 function genComponent (
   componentName: string,
   el: ASTElement,
