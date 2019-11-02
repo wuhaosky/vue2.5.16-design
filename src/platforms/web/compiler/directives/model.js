@@ -115,6 +115,42 @@ function genRadioModel (
   addHandler(el, 'change', genAssignmentCode(value, valueBinding), null, true)
 }
 
+/**
+  示例：
+  <select v-model="city">
+    <option value ="shanghai">ShangHai</option>
+  </select>
+  执行genSelect后，更新el.events属性：
+  "el.events": {
+      "change": {
+          "value": "function($event){
+            var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o){return o.selected}).map(function(o){var val = "_value" in o ? o._value : o.value;return val});
+            city = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+          }"
+      }
+  },
+  生成的render字符串：
+  with(this){
+    return _c(
+      'select',
+      {
+        directives: [{
+          name: "model",
+          rawName: "v-model",
+          value: (city),
+          expression: "city"
+        }],
+        on: {
+          "change": function($event){
+            var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o){return o.selected}).map(function(o){var val = "_value" in o ? o._value : o.value;return val});
+            city = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+          }
+        }
+      },
+      [_c('option', {attrs: {"value": "shanghai"}}, [_v("ShangHai")])]
+    )
+  }
+ */
 function genSelect (
   el: ASTElement,
   value: string,
