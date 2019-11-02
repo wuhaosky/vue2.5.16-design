@@ -1,8 +1,16 @@
 /* @flow */
 
 /**
- * Cross-platform code generation for component v-model
- */
+  component v-model
+  示例：
+  <component is="my" v-model="text">123</component>
+  执行genComponentModel后，el会更新model属性
+  el.model = {
+    value: `(text)`,
+    expression: `"text"`,
+    callback: `function ($$v) {text = $$v}`
+  }
+*/
 export function genComponentModel (
   el: ASTElement,
   value: string,

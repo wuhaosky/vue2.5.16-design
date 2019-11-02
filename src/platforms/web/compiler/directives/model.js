@@ -34,16 +34,6 @@ export default function model (
   }
 
   if (el.component) {
-    /**
-      示例：
-      <component is="my" v-model="text">123</component>
-      执行genComponentModel后，el会增加model属性
-      el.model = {
-        value: `(text)`,
-        expression: `"text"`,
-        callback: `function ($$v) {text = $$v}`
-      }
-    */
     genComponentModel(el, value, modifiers)
     // component v-model doesn't need extra runtime
     return false
