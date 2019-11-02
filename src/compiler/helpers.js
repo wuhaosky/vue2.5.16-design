@@ -44,6 +44,9 @@ export function addDirective (
   el.plain = false
 }
 
+/**
+  更新el.events属性
+*/
 export function addHandler (
   el: ASTElement,
   name: string,
