@@ -144,6 +144,37 @@ function genCheckboxModel (
   )
 }
 
+/**
+  示例：
+  <input type="radio"  v-model="food" value="apple"/>
+  执行genSelect后，更新el.events属性：
+  "el.events": {
+    "change": function($event){
+      food = "apple"
+    }
+  },
+  生成的render字符串：
+  with(this){
+    return _c(
+      'input',
+      {
+        directives: [{
+          name: "model",
+          rawName: "v-model",
+          value: (food),
+          expression: "food"
+        }],
+        attrs: {"type": "radio", "value": "apple"},
+        domProps: {"checked": _q(food, "apple")},
+        on: {
+          "change": function($event){
+            food = "apple"
+          }
+        }
+      }
+    )
+  }
+ */
 function genRadioModel (
   el: ASTElement,
   value: string,
