@@ -36,18 +36,36 @@ const keyNames: { [key: string]: string | Array<string> } = {
 const genGuard = condition => `if(${condition})return null;`
 
 const modifierCode: { [key: string]: string } = {
-  stop: '$event.stopPropagation();',
-  prevent: '$event.preventDefault();',
-  self: genGuard(`$event.target !== $event.currentTarget`),
+  stop: '$event.stopPropagation();',    // 阻止单击事件继续传播
+  prevent: '$event.preventDefault();',  // 取消事件的默认动作
+  self: genGuard(`$event.target !== $event.currentTarget`),    // 即事件不是从内部元素触发的，而是自身触发的
   ctrl: genGuard(`!$event.ctrlKey`),
   shift: genGuard(`!$event.shiftKey`),
   alt: genGuard(`!$event.altKey`),
-  meta: genGuard(`!$event.metaKey`),
-  left: genGuard(`'button' in $event && $event.button !== 0`),
-  middle: genGuard(`'button' in $event && $event.button !== 1`),
-  right: genGuard(`'button' in $event && $event.button !== 2`)
+  meta: genGuard(`!$event.metaKey`),    // 在 Mac 系统键盘上，meta 对应 command 键 (⌘)。在 Windows 系统键盘 meta 对应 Windows 徽标键 (⊞)。
+  left: genGuard(`'button' in $event && $event.button !== 0`),      // 非鼠标左键，则返回null
+  middle: genGuard(`'button' in $event && $event.button !== 1`),    // 非鼠标滚轮，则返回null
+  right: genGuard(`'button' in $event && $event.button !== 2`)      // 非鼠标右键，则返回null
 }
 
+/**
+示例：
+"events": {
+    "click": {
+        "value": "onShopClick",
+        "modifiers": {
+            "stop": true
+        }
+    }
+}
+返回值：
+on: {
+  "click": function($event){
+    $event.stopPropagation();
+    return onShopClick($event)
+  }
+}
+*/
 export function genHandlers (
   events: ASTElementHandlers,
   isNative: boolean,
