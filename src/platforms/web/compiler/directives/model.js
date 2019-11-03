@@ -240,6 +240,45 @@ function genSelect (
   addHandler(el, 'change', code, null, true)
 }
 
+/**
+  示例：
+  <textarea v-model.trim="text" />
+  执行genSelect后，更新el.events属性：
+  "events": {
+      "input": {
+          "value": "if($event.target.composing)return;text=$event.target.value.trim()"
+      },
+      "blur": {
+          "value": "$forceUpdate()"
+      }
+  },
+  生成的render字符串：
+  with(this){
+    return _c(
+      'textarea',
+      {
+        directives: [{
+          name: "model",
+          rawName: "v-model.trim",
+          value: (text),
+          expression: "text",
+          modifiers: {"trim": true}
+        }],
+        domProps: {"value": (text)},
+        on: {
+          "input": function($event){
+            if($event.target.composing)
+              return;
+            text = $event.target.value.trim()
+          },
+          "blur": function($event){
+            return $forceUpdate()
+          }
+        }
+      }
+    )
+  }
+ */
 function genDefaultModel (
   el: ASTElement,
   value: string,
@@ -263,7 +302,7 @@ function genDefaultModel (
 
   const { lazy, number, trim } = modifiers || {}
   const needCompositionGuard = !lazy && type !== 'range'
-  const event = lazy
+  const event = lazy  // lazy修饰符使用change事件，否则使用input事件
     ? 'change'
     : type === 'range'
       ? RANGE_TOKEN
@@ -278,6 +317,13 @@ function genDefaultModel (
   }
 
   let code = genAssignmentCode(value, valueExpression)
+  // IME问题，即中文输入时出现在输入框上方的带候选但还未选择的状态，input框中会输入出现连续的字母异常问题；
+  // onChange或者onInput事件不可用，onblur事件产品体验效果不佳；
+  // onCompositionStart // 开始打字
+  // onCompositionEnd // 打字结束
+  // onCompositionUpdate // 打字过程中
+  // 立flag,在start中置为false,end中为true；在flag为true时，可对输入值有所处理。
+  // 参考文档：https://segmentfault.com/a/1190000009246058
   if (needCompositionGuard) {
     code = `if($event.target.composing)return;${code}`
   }
