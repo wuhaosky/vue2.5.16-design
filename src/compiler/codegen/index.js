@@ -338,7 +338,10 @@ export function genData (el: ASTElement, state: CodegenState): string {
   return data
 }
 
-// 处理el.directives
+/**
+ * 处理el.directives属性
+ * 若el.directives属性包含在{on, bind, cloak, model, html, text}中，也就是内置指令，则要进行处理
+ */
 function genDirectives (el: ASTElement, state: CodegenState): string | void {
   const dirs = el.directives
   if (!dirs) return
@@ -348,7 +351,7 @@ function genDirectives (el: ASTElement, state: CodegenState): string | void {
   for (i = 0, l = dirs.length; i < l; i++) {
     dir = dirs[i]
     needRuntime = true
-    const gen: DirectiveFunction = state.directives[dir.name]
+    const gen: DirectiveFunction = state.directives[dir.name] // {on, bind, cloak, model, html, text}
     if (gen) {
       // compile-time directive that manipulates AST.
       // returns true if it also needs a runtime counterpart.
