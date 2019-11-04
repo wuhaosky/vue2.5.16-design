@@ -1,9 +1,12 @@
 /* @flow */
 
+// 函数表达式，可以是function函数，可以是箭头函数
 const fnExpRE = /^([\w$_]+|\([^)]*?\))\s*=>|^function\s*\(/
+// 方法名
 const simplePathRE = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['[^']*?']|\["[^"]*?"]|\[\d+]|\[[A-Za-z_$][\w$]*])*$/
 
 // KeyboardEvent.keyCode aliases
+// 键盘key对应的key值
 const keyCodes: { [key: string]: number | Array<number> } = {
   esc: 27,
   tab: 9,
@@ -17,6 +20,7 @@ const keyCodes: { [key: string]: number | Array<number> } = {
 }
 
 // KeyboardEvent.key aliases
+// 键盘key对应的别名
 const keyNames: { [key: string]: string | Array<string> } = {
   esc: 'Escape',
   tab: 'Tab',
@@ -33,6 +37,9 @@ const keyNames: { [key: string]: string | Array<string> } = {
 // #4868: modifiers that prevent the execution of the listener
 // need to explicitly return null so that we can determine whether to remove
 // the listener for .once
+/**
+  满足条件的事件，事件回调直接return null，不做任何处理
+*/
 const genGuard = condition => `if(${condition})return null;`
 
 const modifierCode: { [key: string]: string } = {
