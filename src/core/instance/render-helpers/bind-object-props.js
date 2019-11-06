@@ -11,6 +11,7 @@ import {
 
 /**
  * Runtime helper for merging v-bind="object" into a VNode's data.
+ * 把v-bind绑定的属性混入到 VNode's data 属性的on对象中
  */
 export function bindObjectProps (
   data: any,
