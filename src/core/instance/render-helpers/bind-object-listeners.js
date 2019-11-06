@@ -2,6 +2,9 @@
 
 import { warn, extend, isPlainObject } from 'core/util/index'
 
+/**
+  把v-on绑定的事件混入到vnode data属性的on对象中
+*/
 export function bindObjectListeners (data: any, value: any): VNodeData {
   if (value) {
     if (!isPlainObject(value)) {
