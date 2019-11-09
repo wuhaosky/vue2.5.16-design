@@ -75,6 +75,16 @@ declare type ASTDirective = {
   arg: ?string;
   modifiers: ?ASTModifiers;
 };
+// <input v-model="message" placeholder="edit me">
+// "directives": [
+//   {
+//     "name": "model",
+//     "rawName": "v-model",
+//     "value": "message",
+//     "arg": null,
+//     "modifiers": null
+//   }
+// ]
 
 // 元素描述节点，可以是标签描述对象、文本描述对象、模板插值描述对象
 declare type ASTNode = ASTElement | ASTText | ASTExpression;
@@ -168,6 +178,19 @@ declare type ASTExpression = {
   // 2.4 ssr optimization
   ssrOptimizability?: number;
 };
+// 这是插值{{ msg }}示例
+// {
+//     "type": 2,
+//     "expression": "\"这是插值\"+_s(msg)+\"示例\"",
+//     "tokens": [
+//         "这是插值",
+//         {
+//             "@binding": "msg"
+//         },
+//         "示例"
+//     ],
+//     "text": "这是插值{{ msg }}示例"
+// }
 
 // 文本描述对象
 declare type ASTText = {
