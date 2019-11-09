@@ -15,6 +15,7 @@ export const canBeLeftOpenTag = makeMap(
 
 // HTML5 tags https://html.spec.whatwg.org/multipage/indices.html#elements-3
 // Phrasing Content https://html.spec.whatwg.org/multipage/dom.html#phrasing-content
+// 短语元素（Phrasing content） 规定文本和它包含的标记。 一些Phrasing content就构成了段落: https://developer.mozilla.org/zh-CN/docs/Web/Guide/HTML/Content_categories
 export const isNonPhrasingTag = makeMap(
   'address,article,aside,base,blockquote,body,caption,col,colgroup,dd,' +
   'details,dialog,div,dl,dt,fieldset,figcaption,figure,footer,form,' +
