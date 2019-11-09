@@ -91,75 +91,75 @@ declare type ASTNode = ASTElement | ASTText | ASTExpression;
 
 // 标签描述对象
 declare type ASTElement = {
-  type: 1;
-  tag: string;
-  attrsList: Array<{ name: string; value: any }>;
-  attrsMap: { [key: string]: any };
-  parent: ASTElement | void;
-  children: Array<ASTNode>;
+  type: 1;                                            //  type是1意味着是标签
+  tag: string;                                        //  标签名称
+  attrsList: Array<{ name: string; value: any }>;     //  词法分析生成的属性的数组形式，处理后的属性会从数组中删除
+  attrsMap: { [key: string]: any };                   //  词法分析生成的属性的对象形式，包含标签所有的属性
+  parent: ASTElement | void;                          //  父元素
+  children: Array<ASTNode>;                           //  孩子节点
 
-  processed?: true;
+  processed?: true;                                   //  是否已处理过
 
-  static?: boolean;
-  staticRoot?: boolean;
-  staticInFor?: boolean;
-  staticProcessed?: boolean;
-  hasBindings?: boolean;
+  static?: boolean;                                   //  静态节点
+  staticRoot?: boolean;                               //  静态根
+  staticInFor?: boolean;                              //  静态节点处于v-for指令中
+  staticProcessed?: boolean;                          //  是否已经执行过genStatic函数
+  hasBindings?: boolean;                              //  是否含有绑定属性
 
-  text?: string;
-  attrs?: Array<{ name: string; value: any }>;
-  props?: Array<{ name: string; value: string }>;
-  plain?: boolean;
-  pre?: true;
-  ns?: string;
+  text?: string;                                      //
+  attrs?: Array<{ name: string; value: any }>;        //  最终使用el.setAttribute添加的属性
+  props?: Array<{ name: string; value: string }>;     //  最终使用el.属性 直接赋值的属性
+  plain?: boolean;                                    //  是否是纯节点
+  pre?: true;                                         //  是否是pre标签
+  ns?: string;                                        //
 
-  component?: string;
-  inlineTemplate?: true;
-  transitionMode?: string | null;
-  slotName?: ?string;
-  slotTarget?: ?string;
-  slotScope?: ?string;
-  scopedSlots?: { [name: string]: ASTElement };
+  component?: string;                                 //  组件名称
+  inlineTemplate?: true;                              //
+  transitionMode?: string | null;                     //
+  slotName?: ?string;                                 //
+  slotTarget?: ?string;                               //
+  slotScope?: ?string;                                //
+  scopedSlots?: { [name: string]: ASTElement };       //
 
-  ref?: string;
-  refInFor?: boolean;
+  ref?: string;                                       //  ref属性
+  refInFor?: boolean;                                 //  含有ref属性的元素是否位于v-for内
 
-  if?: string;
-  ifProcessed?: boolean;
-  elseif?: string;
-  else?: true;
-  ifConditions?: ASTIfConditions;
+  if?: string;                                        //  if表达式
+  ifProcessed?: boolean;                              //  是否执行过genIf
+  elseif?: string;                                    //  elseif表达式
+  else?: true;                                        //  是否含有else
+  ifConditions?: ASTIfConditions;                     //  if条件块数组
 
-  for?: string;
-  forProcessed?: boolean;
-  key?: string;
-  alias?: string;
-  iterator1?: string;
-  iterator2?: string;
+  for?: string;                                       //  list
+  forProcessed?: boolean;                             //  是否执行过genFor
+  key?: string;                                       //  index
+  alias?: string;                                     //  item
+  iterator1?: string;                                 //  key
+  iterator2?: string;                                 //  index
 
-  staticClass?: string;
-  classBinding?: string;
-  staticStyle?: string;
-  styleBinding?: string;
-  events?: ASTElementHandlers;
-  nativeEvents?: ASTElementHandlers;
+  staticClass?: string;                               //  静态类选择器
+  classBinding?: string;                              //  绑定类选择器
+  staticStyle?: string;                               //  静态样式
+  styleBinding?: string;                              //  绑定样式
+  events?: ASTElementHandlers;                        //  事件对象
+  nativeEvents?: ASTElementHandlers;                  //  原生事件对象
 
-  transition?: string | true;
-  transitionOnAppear?: boolean;
+  transition?: string | true;                         //
+  transitionOnAppear?: boolean;                       //
 
-  model?: {
-    value: string;
-    callback: string;
-    expression: string;
+  model?: {                                           //  component v-model
+    value: string;                                    //
+    callback: string;                                 //
+    expression: string;                               //
   };
 
-  directives?: Array<ASTDirective>;
+  directives?: Array<ASTDirective>;                   //  指令对象
 
-  forbidden?: true;
-  once?: true;
-  onceProcessed?: boolean;
-  wrapData?: (code: string) => string;
-  wrapListeners?: (code: string) => string;
+  forbidden?: true;                                   //  模板内禁止使用style和script标签
+  once?: true;                                        //  是否含有v-once
+  onceProcessed?: boolean;                            //  是否执行过genOnce
+  wrapData?: (code: string) => string;                //  v-bind对象
+  wrapListeners?: (code: string) => string;           //  v-on对象
 
   // 2.4 ssr optimization
   ssrOptimizability?: number;
@@ -171,10 +171,10 @@ declare type ASTElement = {
 // 模板插值描述对象
 declare type ASTExpression = {
   type: 2;                              // type为2表明当前节点是模板插值节点
-  expression: string;                   //
-  text: string;                         //
-  tokens: Array<string | Object>;       //
-  static?: boolean;                     //
+  expression: string;                   // 处理后的模板插值表达式
+  text: string;                         // 未处理的模板插值表达式
+  tokens: Array<string | Object>;       // 记号数组
+  static?: boolean;                     // 是否静态节点
   // 2.4 ssr optimization
   ssrOptimizability?: number;
 };
