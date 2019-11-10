@@ -143,7 +143,7 @@ export function parseHTML (html, options) {
       }
 
       if (options.chars && text) {
-        options.chars(text)
+        options.chars(text) // 调用文本钩子
       }
     } else { // script/style这种纯文本标签
       let endTagLength = 0
