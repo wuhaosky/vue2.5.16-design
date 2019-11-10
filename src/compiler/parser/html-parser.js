@@ -61,7 +61,7 @@ export function parseHTML (html, options) {
   const isUnaryTag = options.isUnaryTag || no
   const canBeLeftOpenTag = options.canBeLeftOpenTag || no
   let index = 0
-  let last, lastTag // lastTag始终是栈顶元素
+  let last, lastTag // lastTag始终是栈顶元素，也就是当前正在解析的元素
   while (html) {
     last = html
     // Make sure we're not in a plaintext content element like script/style
@@ -110,7 +110,7 @@ export function parseHTML (html, options) {
         // Start tag:
         const startTagMatch = parseStartTag()
         if (startTagMatch) {
-          handleStartTag(startTagMatch)
+          handleStartTag(startTagMatch) // 解析属性，压栈，执行开始钩子
           if (shouldIgnoreFirstNewline(lastTag, html)) {
             advance(1)
           }
@@ -242,6 +242,7 @@ export function parseHTML (html, options) {
 
     const l = match.attrs.length
     const attrs = new Array(l) // new Array可以直接生成指定长度的数组
+    // 对属性进行处理
     for (let i = 0; i < l; i++) {
       const args = match.attrs[i]
       // hackish work around FF bug https://bugzilla.mozilla.org/show_bug.cgi?id=369778
@@ -260,18 +261,19 @@ export function parseHTML (html, options) {
       }
     }
 
-    if (!unary) {
+    if (!unary) { // 非一元标签压栈
       stack.push({ tag: tagName, lowerCasedTag: tagName.toLowerCase(), attrs: attrs })
       lastTag = tagName
     }
 
     if (options.start) {
-      options.start(tagName, attrs, unary, match.start, match.end)
+      options.start(tagName, attrs, unary, match.start, match.end) // 调用开始钩子
     }
   }
 
 /**
   检测是否缺少闭合标签
+  调用结束钩子
   处理 stack 栈中剩余的标签
   解析 </br> 与 </p> 标签，与浏览器的行为相同
  *
