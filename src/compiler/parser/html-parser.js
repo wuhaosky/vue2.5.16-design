@@ -220,6 +220,11 @@ export function parseHTML (html, options) {
     }
   }
 
+  /**
+   *
+   *
+   * @param {*} match
+   */
   function handleStartTag (match) {
     const tagName = match.tagName
     const unarySlash = match.unarySlash
