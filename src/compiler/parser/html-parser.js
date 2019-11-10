@@ -69,14 +69,14 @@ export function parseHTML (html, options) {
       let textEnd = html.indexOf('<')
       if (textEnd === 0) {
         // Comment:
-        if (comment.test(html)) {
+        if (comment.test(html)) { // 注释标签
           const commentEnd = html.indexOf('-->')
 
           if (commentEnd >= 0) {
             if (options.shouldKeepComment) {
-              options.comment(html.substring(4, commentEnd))
+              options.comment(html.substring(4, commentEnd)) // 调用注释钩子
             }
-            advance(commentEnd + 3)
+            advance(commentEnd + 3) // 截取掉已处理的注释标签，并更新html字符串、index索引
             continue
           }
         }
@@ -102,7 +102,7 @@ export function parseHTML (html, options) {
         const endTagMatch = html.match(endTag)
         if (endTagMatch) {
           const curIndex = index
-          advance(endTagMatch[0].length)
+          advance(endTagMatch[0].length) // 截取掉已解析的结束标签，并更新html字符串、index索引
           parseEndTag(endTagMatch[1], curIndex, index)
           continue
         }
@@ -186,6 +186,17 @@ export function parseHTML (html, options) {
     html = html.substring(n)
   }
 
+  /**
+    解析开始标签
+    返回解析结果
+    {
+      tagName,    // 标签名
+      attrs,      // 此标签包含的属性
+      start,      // 标签在html中开始的位置
+      end,        // 标签在html中结束的位置
+      unarySlash  // 一元标签斜线
+    }
+   */
   function parseStartTag () {
     const start = html.match(startTagOpen)
     if (start) {
