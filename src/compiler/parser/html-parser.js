@@ -61,11 +61,11 @@ export function parseHTML (html, options) {
   const isUnaryTag = options.isUnaryTag || no
   const canBeLeftOpenTag = options.canBeLeftOpenTag || no
   let index = 0
-  let last, lastTag // lastTag始终是栈顶元素，也就是当前正在解析的元素
+  let last, lastTag // lastTag始终是栈顶元素，最近一次遇到的非一元标签的开始标签
   while (html) {
     last = html
     // Make sure we're not in a plaintext content element like script/style
-    if (!lastTag || !isPlainTextElement(lastTag)) { // 非script/style这种纯文本标签
+    if (!lastTag || !isPlainTextElement(lastTag)) { // 非 script/style/textarea 这种纯文本标签
       let textEnd = html.indexOf('<')
       if (textEnd === 0) {
         // Comment:
@@ -145,7 +145,7 @@ export function parseHTML (html, options) {
       if (options.chars && text) {
         options.chars(text) // 调用文本钩子
       }
-    } else { // script/style这种纯文本标签
+    } else { // 最近一次遇到的非一元标签是纯文本标签(即：script,style,textarea 标签)。也就是说：当前我们正在处理的是纯文本标签里面的内容。
       let endTagLength = 0
       const stackedTag = lastTag.toLowerCase()
       const reStackedTag = reCache[stackedTag] || (reCache[stackedTag] = new RegExp('([\\s\\S]*?)(</' + stackedTag + '[^>]*>)', 'i'))
@@ -161,13 +161,13 @@ export function parseHTML (html, options) {
           text = text.slice(1)
         }
         if (options.chars) {
-          options.chars(text)
+          options.chars(text) // script,style,textarea 标签内的内容当做文本处理
         }
         return ''
       })
       index += html.length - rest.length
       html = rest
-      parseEndTag(stackedTag, index - endTagLength, index)
+      parseEndTag(stackedTag, index - endTagLength, index) // 处理文本标签的结束标签
     }
 
     if (html === last) { // 作为普通字符串处理
@@ -318,11 +318,11 @@ export function parseHTML (html, options) {
       // Remove the open elements from the stack
       stack.length = pos
       lastTag = pos && stack[pos - 1].tag  // 处理 stack 栈中剩余的标签
-    } else if (lowerCasedTagName === 'br') {  // 解析 </br> 与 </p> 标签，与浏览器的行为相同
+    } else if (lowerCasedTagName === 'br') {  // 解析 </br> 为 <br>
       if (options.start) {
         options.start(tagName, [], true, start, end)
       }
-    } else if (lowerCasedTagName === 'p') {
+    } else if (lowerCasedTagName === 'p') {  // 解析 <p> 为 <p></p>
       if (options.start) {
         options.start(tagName, [], false, start, end)
       }
