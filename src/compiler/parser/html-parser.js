@@ -121,12 +121,12 @@ export function parseHTML (html, options) {
       let text, rest, next
       if (textEnd >= 0) {
         rest = html.slice(textEnd)
-        while (
+        while ( // 不满足这四个条件，说明符号 “<” 存在于普通文本中
           !endTag.test(rest) &&
           !startTagOpen.test(rest) &&
           !comment.test(rest) &&
           !conditionalComment.test(rest)
-        ) { // 说明符号 < 存在于普通文本中
+        ) {
           // < in plain text, be forgiving and treat it as text
           next = rest.indexOf('<', 1)
           if (next < 0) break
@@ -149,6 +149,7 @@ export function parseHTML (html, options) {
       let endTagLength = 0
       const stackedTag = lastTag.toLowerCase()
       const reStackedTag = reCache[stackedTag] || (reCache[stackedTag] = new RegExp('([\\s\\S]*?)(</' + stackedTag + '[^>]*>)', 'i'))
+      // replace函数参考：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/replace
       const rest = html.replace(reStackedTag, function (all, text, endTag) {
         endTagLength = endTag.length
         if (!isPlainTextElement(stackedTag) && stackedTag !== 'noscript') {
@@ -271,17 +272,13 @@ export function parseHTML (html, options) {
     }
   }
 
-/**
-  检测是否缺少闭合标签
-  调用结束钩子
-  处理 stack 栈中剩余的标签
-  解析 </br> 与 </p> 标签，与浏览器的行为相同
- *
- * @param {*} tagName
- * @param {*} start
- * @param {*} end
- */
-function parseEndTag (tagName, start, end) {
+  /**
+    检测是否缺少闭合标签
+    调用结束钩子
+    处理 stack 栈中剩余的标签
+    解析 </br> 与 </p> 标签，与浏览器的行为相同
+  */
+  function parseEndTag (tagName, start, end) {
     let pos, lowerCasedTagName
     if (start == null) start = index
     if (end == null) end = index
