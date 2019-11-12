@@ -150,6 +150,8 @@ export function parseHTML (html, options) {
       const stackedTag = lastTag.toLowerCase()
       const reStackedTag = reCache[stackedTag] || (reCache[stackedTag] = new RegExp('([\\s\\S]*?)(</' + stackedTag + '[^>]*>)', 'i'))
       // replace函数参考：https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/replace
+      // 把文本标签的内容和文本标签的结束标签 整体替换为 ""
+      // rest为替换后剩余的html字符串
       const rest = html.replace(reStackedTag, function (all, text, endTag) {
         endTagLength = endTag.length
         if (!isPlainTextElement(stackedTag) && stackedTag !== 'noscript') {
