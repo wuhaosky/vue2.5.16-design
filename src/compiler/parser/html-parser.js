@@ -222,18 +222,24 @@ export function parseHTML (html, options) {
   }
 
   /**
-   *
-   *
-   * @param {*} match
+   * 处理浏览器的怪异操作
+   * 解析属性
+   * 非一元标签，则进栈，并更新lastTag
+   * 调用开始钩子
    */
   function handleStartTag (match) {
     const tagName = match.tagName
     const unarySlash = match.unarySlash
 
     if (expectHTML) {
-      if (lastTag === 'p' && isNonPhrasingTag(tagName)) { // TODO: 段落式内容 流式内容？
+      // 最近一次遇到的开始标签是 p 标签，并且当前正在解析的开始标签必须不能是 段落式内容(Phrasing content) 模型，这时候 if 语句块的代码才会执行
+      // 每一个 html 元素都拥有一个或多个内容模型(content model)，其中 p 标签本身的内容模型是 流式内容(Flow content)，并且 p 标签的特性是只允许包含 段落式内容(Phrasing content)
+      // 如果是非段落式内容，则自动闭合p标签。
+      if (lastTag === 'p' && isNonPhrasingTag(tagName)) {
         parseEndTag(lastTag)
       }
+      // 当前正在解析的标签是一个可以省略结束标签的标签，并且与上一次解析到的开始标签相同，则执行此if语句
+      // 这个代码块的作用是闭合当前标签
       if (canBeLeftOpenTag(tagName) && lastTag === tagName) {
         parseEndTag(tagName)
       }
@@ -287,7 +293,7 @@ export function parseHTML (html, options) {
       lowerCasedTagName = tagName.toLowerCase()
     }
 
-    // Find the closest opened tag of the same type
+    // Find the closest opened tag of the same type    如果找不到 结束标签（tagName）对应的开始标签，则pos为-1，则不做任何处理。
     if (tagName) {
       for (pos = stack.length - 1; pos >= 0; pos--) {
         if (stack[pos].lowerCasedTag === lowerCasedTagName) {
@@ -301,7 +307,7 @@ export function parseHTML (html, options) {
 
     if (pos >= 0) {
       // Close all the open elements, up the stack
-      for (let i = stack.length - 1; i >= pos; i--) { // 检测是否缺少闭合标签
+      for (let i = stack.length - 1; i >= pos; i--) { // 正常情况下，当前结束标签（tagName）对应的是栈顶元素，也就是pos = stack.length - 1；否则，tagName中间的标签缺少闭合标签。
         if (process.env.NODE_ENV !== 'production' &&
           (i > pos || !tagName) &&
           options.warn
@@ -311,18 +317,18 @@ export function parseHTML (html, options) {
           )
         }
         if (options.end) {
-          options.end(stack[i].tag, start, end)
+          options.end(stack[i].tag, start, end)  // 调用结束标签钩子
         }
       }
 
       // Remove the open elements from the stack
-      stack.length = pos
+      stack.length = pos                   // 更新 stack 和 lastTag
       lastTag = pos && stack[pos - 1].tag  // 处理 stack 栈中剩余的标签
     } else if (lowerCasedTagName === 'br') {  // 解析 </br> 为 <br>
       if (options.start) {
         options.start(tagName, [], true, start, end)
       }
-    } else if (lowerCasedTagName === 'p') {  // 解析 <p> 为 <p></p>
+    } else if (lowerCasedTagName === 'p') {  // 解析 </p> 为 <p></p>
       if (options.start) {
         options.start(tagName, [], false, start, end)
       }
