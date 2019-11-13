@@ -206,7 +206,7 @@ export function parse (
           )
         }
       }
-      if (currentParent && !element.forbidden) {
+      if (currentParent && !element.forbidden) { // forbidden的标签不体现在AST树中
         if (element.elseif || element.else) { // 当一个元素使用了 v-else-if 或 v-else 指令时，它们是不会作为父级元素子节点的，而是会被添加到相符的使用了 v-if 指令的元素描述对象的 ifConditions 数组中。
           processIfConditions(element, currentParent)
         } else if (element.slotScope) { // scoped slot 使用了 slot-scope 特性的元素来讲它们将被添加到父级元素描述对象的 scopedSlots 对象下
