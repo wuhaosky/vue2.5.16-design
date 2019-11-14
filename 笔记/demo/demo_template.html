@@ -1,0 +1,22 @@
+<div class="app">
+  <input v-model="modelText2"/>
+  <div v-pre>vpreText</div>
+  <pre>preText</pre>
+  <div v-for="(item, index) in list" :key="index">{{item}}</div>
+  <div v-for="(value, key, index) in obj" :key="key">{{value}}</div>
+  <div v-if="showCondition == 1">测试v-if指令</div>
+  <div v-else-if="showCondition == 2">测试v-else-if指令</div>
+  <div v-else>测试v-else指令</div>
+  <div v-once>onceText</div>
+  <div key="keyIndex">keyText</div>
+  <div ref="mydom" class="app-ref">测试ref</div>
+  <slot >slotText</slot>
+  <component :is="comp" v-bind:text.sync="modelText"></component>
+  <div class="app-btn" @click.stop="onBtnClick">button</div>
+  <div class="app-text">测试纯文本{{modelText}}</div>
+  <div class="app-domprops" v-html="123" >测试domProps</div>
+  <div class="app-class" :class="{active: isActive}">绑定HTML class</div>
+  <div class="app-attr" attr1="val1" attr2="val2" :shop="shopV">测试属性</div>
+  <div v-capture.m1.m2 class="app-capture">测试自定义指令</div>
+  <div style="border: 3px solid #0f0" :style="styleObject">测试style</div>
+</div>
