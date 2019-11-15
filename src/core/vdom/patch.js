@@ -391,12 +391,17 @@ export function createPatchFunction (backend) {
     }
   }
 
+  /**
+   * 销毁vnode
+   *
+   * @param {*} vnode
+   */
   function invokeDestroyHook (vnode) {
     let i, j
     const data = vnode.data
     if (isDef(data)) {
-      if (isDef(i = data.hook) && isDef(i = i.destroy)) i(vnode)
-      for (i = 0; i < cbs.destroy.length; ++i) cbs.destroy[i](vnode)
+      if (isDef(i = data.hook) && isDef(i = i.destroy)) i(vnode)  // vue组件调用destroy钩子
+      for (i = 0; i < cbs.destroy.length; ++i) cbs.destroy[i](vnode) // modules调用destroy钩子
     }
     if (isDef(i = vnode.children)) {
       for (j = 0; j < vnode.children.length; ++j) {
