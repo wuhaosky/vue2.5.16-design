@@ -80,11 +80,11 @@ export function initMixin (Vue: Class<Component>) {
  * @param {InternalComponentOptions} options  VueComponent 选项参数
  */
 export function initInternalComponent (vm: Component, options: InternalComponentOptions) {
-  const opts = vm.$options = Object.create(vm.constructor.options)
+  const opts = vm.$options = Object.create(vm.constructor.options) // 继承Vue组件的选项参数
   // doing this because it's faster than dynamic enumeration.
-  const parentVnode = options._parentVnode
-  opts.parent = options.parent
-  opts._parentVnode = parentVnode
+  const parentVnode = options._parentVnode  // 本组件vnode
+  opts.parent = options.parent              // 父Vue实例
+  opts._parentVnode = parentVnode           // 本组件vnode
   opts._parentElm = options._parentElm
   opts._refElm = options._refElm
 

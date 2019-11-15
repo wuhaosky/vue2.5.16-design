@@ -247,9 +247,9 @@ export function createComponentInstanceForVnode (
   refElm?: ?Node
 ): Component {
   const options: InternalComponentOptions = {
-    _isComponent: true,
-    parent,
-    _parentVnode: vnode,
+    _isComponent: true,               // 组件标识
+    parent,                           // 父Vue实例
+    _parentVnode: vnode,              // 本组件vnode
     _parentElm: parentElm || null,
     _refElm: refElm || null
   }
