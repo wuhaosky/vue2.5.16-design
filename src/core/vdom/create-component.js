@@ -33,6 +33,7 @@ import {
 } from 'weex/runtime/recycle-list/render-component-template'
 
 // inline hooks to be invoked on component VNodes during patch
+// 组件patch阶段会使用到的钩子
 const componentVNodeHooks = {
   init (
     vnode: VNodeWithData,
@@ -108,6 +109,11 @@ const hooksToMerge = Object.keys(componentVNodeHooks)
 /**
  * 创建vue组件的vnode实例
  *
+ * 关键一步：根据Vue组件的选项参数生成Vue组件的构造函数
+ * 另外，还处理了：
+ * 1.component v-model 处理，为VNodeData添加了props和on相关的属性
+ * 2.提取有效的props
+ * 3.安装patch阶段使用的组件钩子
  * @export
  * @param {(Class<Component> | Function | Object | void)} Ctor vue组件的选项对象
  * @param {?VNodeData} data vue组件的data
@@ -169,11 +175,12 @@ export function createComponent (
   resolveConstructorOptions(Ctor)
 
   // transform component v-model data into props & events
+  // component v-model 处理
   if (isDef(data.model)) {
     transformModel(Ctor.options, data)
   }
 
-  // extract props
+  // extract props 提取有效的props
   const propsData = extractPropsFromVNodeData(data, Ctor, tag)
 
   // functional component
@@ -255,6 +262,9 @@ export function createComponentInstanceForVnode (
   return new vnode.componentOptions.Ctor(options)
 }
 
+/**
+ * 安装组件钩子
+ */
 function installComponentHooks (data: VNodeData) {
   const hooks = data.hook || (data.hook = {})
   for (let i = 0; i < hooksToMerge.length; i++) {
@@ -265,6 +275,11 @@ function installComponentHooks (data: VNodeData) {
 
 // transform component v-model info (value and callback) into
 // prop and event handler respectively.
+/**
+ * component v-model
+ * 组件VNodeData's props属性增加属性；
+ * 组件VNodeData's on属性增加事件；
+ */
 function transformModel (options, data: any) {
   const prop = (options.model && options.model.prop) || 'value'
   const event = (options.model && options.model.event) || 'input'

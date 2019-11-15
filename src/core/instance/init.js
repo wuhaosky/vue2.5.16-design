@@ -100,6 +100,9 @@ export function initInternalComponent (vm: Component, options: InternalComponent
   }
 }
 
+/**
+  用来获取构造函数的 options 属性的
+ */
 export function resolveConstructorOptions (Ctor: Class<Component>) {
   let options = Ctor.options
   if (Ctor.super) {

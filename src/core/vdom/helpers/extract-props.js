@@ -9,6 +9,14 @@ import {
   formatComponentName
 } from 'core/util/index'
 
+/**
+  提取有效的props
+
+  组件的VnodeData有props和attrs属性；
+  组件的选项参数有props属性；
+  如果属性同时存在于VnodeData和选项参数，则提取出来；
+  如果提取的属性位于attrs，则删除attrs中的属性。
+*/
 export function extractPropsFromVNodeData (
   data: VNodeData,
   Ctor: Class<Component>,

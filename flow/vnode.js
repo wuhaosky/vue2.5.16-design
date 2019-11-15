@@ -1,11 +1,11 @@
 declare type VNodeChildren = Array<?VNode | string | VNodeChildren> | string;
 
 declare type VNodeComponentOptions = {
-  Ctor: Class<Component>;
-  propsData: ?Object;
-  listeners: ?Object;
-  children: ?Array<VNode>;
-  tag?: string;
+  Ctor: Class<Component>;   // Vue组件构造函数
+  propsData: ?Object;       // 有效的props
+  listeners: ?Object;       // 非dom事件
+  children: ?Array<VNode>;  // 孩子
+  tag?: string;             //
 };
 
 declare type MountedComponentVNode = {
