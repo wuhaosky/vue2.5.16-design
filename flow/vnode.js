@@ -26,7 +26,7 @@ declare type VNodeWithData = {
   ns: string | void;
   context: Component;
   key: string | number | void;
-  parent?: VNodeWithData;
+  parent?: VNodeWithData; // _render函数里，建立Vue组件的VNode之间的单向父子关系，只能子组件VNode找到父组件VNode
   componentOptions?: VNodeComponentOptions;
   componentInstance?: Component;
   isRootInsert: boolean;
