@@ -322,6 +322,13 @@ export function createPatchFunction (backend) {
     }
   }
 
+  /**
+   * 创建孩子节点的elm
+   *
+   * @param {*} vnode
+   * @param {*} children
+   * @param {*} insertedVnodeQueue
+   */
   function createChildren (vnode, children, insertedVnodeQueue) {
     if (Array.isArray(children)) {
       if (process.env.NODE_ENV !== 'production') {
@@ -344,7 +351,7 @@ export function createPatchFunction (backend) {
 
   /**
   * 调用所有module的create钩子
-  *
+  * 如果当前vnode是vue组件vnode的话，还要调用vue实例的create钩子，并把当前vnode push到insertedVnodeQueue数组中
   * @param {*} vnode
   * @param {*} insertedVnodeQueue
   */
