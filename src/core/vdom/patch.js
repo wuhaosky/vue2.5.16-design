@@ -196,7 +196,7 @@ export function createPatchFunction (backend) {
 
       vnode.elm = vnode.ns
         ? nodeOps.createElementNS(vnode.ns, tag)
-        : nodeOps.createElement(tag, vnode)
+        : nodeOps.createElement(tag, vnode)  // 创建真实dom
       setScope(vnode)
 
       /* istanbul ignore if */
@@ -219,9 +219,11 @@ export function createPatchFunction (backend) {
           insert(parentElm, vnode.elm, refElm)
         }
       } else {
+        // 生成孩子的elm
         createChildren(vnode, children, insertedVnodeQueue)
         if (isDef(data)) {
-          // 调用所有module的create钩子
+          // 调用所有module的create钩子，如果当前vnode是vue组件vnode的话，
+          // 还要调用vue实例的create钩子，并把当前vnode push到insertedVnodeQueue数组中
           invokeCreateHooks(vnode, insertedVnodeQueue)
         }
         // 把生成的dom挂载到父元素上
@@ -310,6 +312,14 @@ export function createPatchFunction (backend) {
     insert(parentElm, vnode.elm, refElm)
   }
 
+  /**
+  * 把elm插入父elm中，并根据ref确定插入到父elm中的位置
+  *
+  * ref有值则把elm插入到ref之前；否则，插入到父elm尾部
+  * @param {*} parent 父elm
+  * @param {*} elm    当前elm
+  * @param {*} ref    参照物elm
+  */
   function insert (parent, elm, ref) {
     if (isDef(parent)) {
       if (isDef(ref)) {
