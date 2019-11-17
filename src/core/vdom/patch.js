@@ -32,8 +32,9 @@ export const emptyNode = new VNode('', {}, [])
 
 const hooks = ['create', 'activate', 'update', 'remove', 'destroy']
 
-// 比较两个节点是否相同
 /**
+  比较两个节点是否相同
+
   判断两个VNode节点是否是同一个节点，需要满足以下条件
   key相同
   tag（当前节点的标签名）相同
@@ -598,7 +599,7 @@ export function createPatchFunction (backend) {
     }
   }
 
-  /** 处理子节点的patch
+  /** 节点的patch
     这个方法做的事情：
         找到对应的真实dom，称为el
         判断Vnode和oldVnode是否指向同一个对象，如果是，那么直接return
