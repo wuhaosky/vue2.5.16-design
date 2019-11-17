@@ -115,7 +115,9 @@ export function createPatchFunction (backend) {
     remove.listeners = listeners
     return remove
   }
-
+  /**
+    移除文本节点
+  */
   function removeNode (el) {
     const parent = nodeOps.parentNode(el)
     // element may have already been removed due to v-html / v-text
@@ -179,6 +181,7 @@ export function createPatchFunction (backend) {
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
+    // 标签
     if (isDef(tag)) {
       if (process.env.NODE_ENV !== 'production') {
         if (data && data.pre) {
@@ -233,10 +236,10 @@ export function createPatchFunction (backend) {
       if (process.env.NODE_ENV !== 'production' && data && data.pre) {
         creatingElmInVPre--
       }
-    } else if (isTrue(vnode.isComment)) {
+    } else if (isTrue(vnode.isComment)) { // 注释
       vnode.elm = nodeOps.createComment(vnode.text)
       insert(parentElm, vnode.elm, refElm)
-    } else {
+    } else { // 文本
       vnode.elm = nodeOps.createTextNode(vnode.text)
       insert(parentElm, vnode.elm, refElm)
     }
@@ -426,21 +429,25 @@ export function createPatchFunction (backend) {
       }
     }
   }
-
+  /**
+    移除节点数组
+  */
   function removeVnodes (parentElm, vnodes, startIdx, endIdx) {
     for (; startIdx <= endIdx; ++startIdx) {
       const ch = vnodes[startIdx]
       if (isDef(ch)) {
         if (isDef(ch.tag)) {
-          removeAndInvokeRemoveHook(ch)
-          invokeDestroyHook(ch)
-        } else { // Text node
+          removeAndInvokeRemoveHook(ch) // 调用remove钩子
+          invokeDestroyHook(ch)    // 调用destroy钩子
+        } else { // Text node 移除文本节点
           removeNode(ch.elm)
         }
       }
     }
   }
-
+  /**
+   * 调用remove钩子
+   */
   function removeAndInvokeRemoveHook (vnode, rm) {
     if (isDef(rm) || isDef(vnode.data)) {
       let i
@@ -673,6 +680,9 @@ export function createPatchFunction (backend) {
     }
   }
 
+  /**
+    调用vue组件实例的insert钩子
+  */
   function invokeInsertHook (vnode, queue, initial) {
     // delay insert hooks for component root nodes, invoke them after the
     // element is really inserted
@@ -680,7 +690,7 @@ export function createPatchFunction (backend) {
       vnode.parent.data.pendingInsert = queue
     } else {
       for (let i = 0; i < queue.length; ++i) {
-        queue[i].data.hook.insert(queue[i])
+        queue[i].data.hook.insert(queue[i])  // 调用vue组件实例的insert钩子，第一次挂载则调用“mounted”钩子
       }
     }
   }
@@ -797,18 +807,18 @@ export function createPatchFunction (backend) {
     }
   }
 
-  // 处理根节点的patch
+  // 处理vue组件的新、老vnode的patch
   return function patch (oldVnode, vnode, hydrating, removeOnly, parentElm, refElm) {
-    // vnode不存在则直接调用销毁钩子
+    // VueComponent销毁时执行
     if (isUndef(vnode)) {
       if (isDef(oldVnode)) invokeDestroyHook(oldVnode)
       return
     }
 
     let isInitialPatch = false
-    const insertedVnodeQueue = []
+    const insertedVnodeQueue = [] // 当前Vue组件含有的子Vue组件Vnode队列
 
-    if (isUndef(oldVnode)) {
+    if (isUndef(oldVnode)) { // VueComponent 第一次挂载时执行
       // empty mount (likely as component), create new root element
       // oldVnode未定义的时候，其实也就是root节点，创建一个新的节点
       isInitialPatch = true
@@ -909,7 +919,7 @@ export function createPatchFunction (backend) {
         }
       }
     }
-    // 调用insert钩子
+    // 调用vue组件实例的insert钩子
     invokeInsertHook(vnode, insertedVnodeQueue, isInitialPatch)
     return vnode.elm
   }

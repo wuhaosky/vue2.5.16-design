@@ -71,7 +71,7 @@ const componentVNodeHooks = {
       options.children // new children
     )
   },
-
+  // 第一次挂载则调用“mounted”钩子
   insert (vnode: MountedComponentVNode) {
     const { context, componentInstance } = vnode
     if (!componentInstance._isMounted) {

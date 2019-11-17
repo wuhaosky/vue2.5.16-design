@@ -34,7 +34,7 @@ export function initLifecycle (vm: Component) {
     parent.$children.push(vm)
   }
 
-  vm.$parent = parent
+  vm.$parent = parent // 父Vue实例
   vm.$root = parent ? parent.$root : vm
 
   vm.$children = []
@@ -83,7 +83,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     if (vm.$el) {
       vm.$el.__vue__ = vm
     }
-    // if parent is an HOC, update its $el as well
+    // if parent is an HOC, update its $el as well  HOC(High order component，高阶组件)
     if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
       vm.$parent.$el = vm.$el
     }

@@ -23,14 +23,14 @@ declare interface Component {
   $el: any; // so that we can attach __vue__ to it
   $data: Object;
   $props: Object;
-  $options: ComponentOptions;
-  $parent: Component | void;
+  $options: ComponentOptions; // Vue组件选项参数
+  $parent: Component | void;  // 父Vue实例
   $root: Component;
   $children: Array<Component>;
   $refs: { [key: string]: Component | Element | Array<Component | Element> | void };
   $slots: { [key: string]: Array<VNode> };
   $scopedSlots: { [key: string]: () => VNodeChildren };
-  $vnode: VNode; // the placeholder node for the component in parent's render tree
+  $vnode: VNode; // the placeholder node for the component in parent's render tree 父组件的vnode
   $attrs: { [key: string] : string };
   $listeners: { [key: string]: Function | Array<Function> };
   $isServer: boolean;
@@ -67,7 +67,7 @@ declare interface Component {
   _isMounted: boolean;
   _isDestroyed: boolean;
   _isBeingDestroyed: boolean;
-  _vnode: ?VNode; // self root node
+  _vnode: ?VNode; // self root node  当前Vue组件的vnode对象
   _staticTrees: ?Array<VNode>; // v-once cached trees
   _hasHookEvent: boolean;
   _provided: ?Object;
