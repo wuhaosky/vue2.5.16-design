@@ -30,6 +30,7 @@ import {
 
 export const emptyNode = new VNode('', {}, [])
 
+// 运行时各阶段的钩子函数
 const hooks = ['create', 'activate', 'update', 'remove', 'destroy']
 
 /**
@@ -84,7 +85,7 @@ function createKeyToOldIdx (children, beginIdx, endIdx) {
 export function createPatchFunction (backend) {
   let i, j
   const cbs = {}
-  // cbs
+  // cbs 运行时各阶段要执行的钩子函数所对应的modules方法
   // {
   //   activate: [ƒ]
   //   create: (8) [ƒ, ƒ, ƒ, ƒ, ƒ, ƒ, ƒ, ƒ]
@@ -92,6 +93,8 @@ export function createPatchFunction (backend) {
   //   remove: [ƒ]
   //   update: (7) [ƒ, ƒ, ƒ, ƒ, ƒ, ƒ, ƒ]
   // }
+  // modules modules指定了，运行时阶段需要对dom做些什么操作
+  // [attrs, klass, events, domProps, style, transition, ref, directives]
   const { modules, nodeOps } = backend
 
   for (i = 0; i < hooks.length; ++i) {
@@ -821,7 +824,7 @@ export function createPatchFunction (backend) {
 
     if (isUndef(oldVnode)) { // VueComponent 第一次挂载时执行
       // empty mount (likely as component), create new root element
-      // oldVnode未定义的时候，其实也就是root节点，创建一个新的节点
+      // oldVnode未定义的时候，其实也就是root节点，创建一个新的节点，并挂载到body上
       isInitialPatch = true
       createElm(vnode, insertedVnodeQueue, parentElm, refElm)
     } else {
