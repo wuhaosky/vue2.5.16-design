@@ -56,8 +56,8 @@ declare interface Component {
   _self: Component;
   _renderProxy: Component;
   _renderContext: ?Component;
-  _watcher: Watcher;
-  _watchers: Array<Watcher>;
+  _watcher: Watcher;  // 渲染函数的观察者
+  _watchers: Array<Watcher>;  // 属于该组件实例的观察者都会被添加到该组件实例对象的 vm._watchers 数组中，包括渲染函数的观察者和非渲染函数的观察者
   _computedWatchers: { [key: string]: Watcher };
   _data: Object;
   _props: Object;
