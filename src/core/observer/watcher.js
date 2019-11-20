@@ -21,24 +21,25 @@ let uid = 0
  * A watcher parses an expression, collects dependencies,
  * and fires callback when the expression value changes.
  * This is used for both the $watch() api and directives.
+ * 一个表达式的观察者，收集这个表达式的依赖，当表达式改变时，触发观察者的回调函数
  */
 export default class Watcher {
-  vm: Component;
+  vm: Component; // 该属性指明了这个观察者是属于哪一个组件的
   expression: string;
-  cb: Function;
+  cb: Function; // 回调函数
   id: number;
-  deep: boolean;
-  user: boolean;
+  deep: boolean; // 发现对象内部值的变化
+  user: boolean; // 这代表该观察者实例是用户创建的
   lazy: boolean;
   sync: boolean;
   dirty: boolean; // dirty是缓存标识，true意味着没有缓存需要重新计算，false意味着有缓存不需要重新计算
-  active: boolean;
-  deps: Array<Dep>;
-  newDeps: Array<Dep>;
+  active: boolean; // 观察者是否有效
+  deps: Array<Dep>;   // 上一次求值时，收集到的依赖
+  newDeps: Array<Dep>; // 最近一次求值时，收集到的依赖
   depIds: SimpleSet;
   newDepIds: SimpleSet;
-  getter: Function;
-  value: any;
+  getter: Function;  // 返回值是value
+  value: any; // 当前值
 
   constructor (
     vm: Component,
@@ -47,7 +48,7 @@ export default class Watcher {
     options?: ?Object,
     isRenderWatcher?: boolean
   ) {
-    this.vm = vm // 该属性指明了这个观察者是属于哪一个组件的
+    this.vm = vm
     if (isRenderWatcher) { // 标识着是否是渲染函数的观察者
       vm._watcher = this
     }
@@ -94,9 +95,10 @@ export default class Watcher {
 
   /**
    * Evaluate the getter, and re-collect dependencies.
+   * 计算当前值，并收集依赖
    */
   get () {
-    pushTarget(this)
+    pushTarget(this) // 让依赖知道当前求值的是哪个观察者
     let value
     const vm = this.vm
     try {
@@ -111,7 +113,7 @@ export default class Watcher {
       // "touch" every property so they are all tracked as
       // dependencies for deep watching
       if (this.deep) {
-        traverse(value)
+        traverse(value) // 递归求对象（所有对象属性）或数组（所有元素）的值，收集所有相关依赖
       }
       popTarget()
       this.cleanupDeps()
@@ -125,10 +127,10 @@ export default class Watcher {
    */
   addDep (dep: Dep) {
     const id = dep.id
-    if (!this.newDepIds.has(id)) {
+    if (!this.newDepIds.has(id)) { // 把依赖添加到newDeps里
       this.newDepIds.add(id)
       this.newDeps.push(dep)
-      if (!this.depIds.has(id)) {
+      if (!this.depIds.has(id)) { // 把观察者添加到依赖里，建立依赖和观察者的双向引用
         dep.addSub(this)
       }
     }
@@ -136,10 +138,11 @@ export default class Watcher {
 
   /**
    * Clean up for dependency collection.
+   * 把最新一次收集的依赖存储到deps里，然后清空newDeps
    */
   cleanupDeps () {
     let i = this.deps.length
-    while (i--) {
+    while (i--) { //
       const dep = this.deps[i]
       if (!this.newDepIds.has(dep.id)) { // 检查上一次求值所收集到的 Dep 实例对象是否存在于当前这次求值所收集到的 Dep 实例对象中
         dep.removeSub(this) // 将该观察者对象从 Dep 实例对象中移除
@@ -158,7 +161,7 @@ export default class Watcher {
   /**
    * Subscriber interface.
    * Will be called when a dependency changes.
-   * 观测对象变化时调用
+   * 订阅接口，当观测对象变化时调用。
    */
   update () {
     /* istanbul ignore else */
@@ -174,6 +177,7 @@ export default class Watcher {
   /**
    * Scheduler job interface.
    * Will be called by the scheduler.
+   * 调度作业接口，异步更新时会被调度器调用。
    */
   run () {
     if (this.active) {
@@ -205,10 +209,11 @@ export default class Watcher {
   /**
    * Evaluate the value of the watcher.
    * This only gets called for lazy watchers.
+   * 计算观察者的值，这个方法只被计算属性调用
    */
   evaluate () {
     this.value = this.get()
-    this.dirty = false // 设置缓存标识
+    this.dirty = false // 设置缓存标识，false意味着有缓存不需要重新计算
   }
 
   /**
@@ -223,6 +228,8 @@ export default class Watcher {
 
   /**
    * Remove self from all dependencies' subscriber list.
+   * 将当前观察者从vue实例中删除；
+   * 调用当前观察者的所有依赖的removeSub方法。
    */
   teardown () {
     if (this.active) { // 如果为假则说明该观察者已经不处于激活状态
@@ -236,7 +243,7 @@ export default class Watcher {
       while (i--) {
         this.deps[i].removeSub(this) // 将当前观察者实例对象从所有的 Dep 实例对象中移除
       }
-      this.active = false
+      this.active = false // 观察者失效
     }
   }
 }

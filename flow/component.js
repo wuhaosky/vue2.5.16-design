@@ -66,7 +66,7 @@ declare interface Component {
   _directInactive: boolean;
   _isMounted: boolean;
   _isDestroyed: boolean;
-  _isBeingDestroyed: boolean;
+  _isBeingDestroyed: boolean; // 当前vue实例已经被销毁
   _vnode: ?VNode; // self root node  当前Vue组件的vnode对象
   _staticTrees: ?Array<VNode>; // v-once cached trees
   _hasHookEvent: boolean;
