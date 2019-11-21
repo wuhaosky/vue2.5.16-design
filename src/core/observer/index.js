@@ -170,9 +170,9 @@ export function defineReactive (
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
       if (Dep.target) { // 收集依赖
-        dep.depend() // 触发时机是当属性值被修改时触发，即在 set 函数中触发
+        dep.depend() // 触发时机是val被修改时触发，即在 set 访问器方法中触发
         if (childOb) {
-          childOb.dep.depend()  // __ob__ 属性以及 __ob__.dep 的主要作用是为了添加、删除属性时有能力触发依赖，而这就是 Vue.set 或 Vue.delete 的原理。
+          childOb.dep.depend()  // 触发时机是val添加、删除属性时触发，即在 Vue.set 或 Vue.delete 方法中触发
           if (Array.isArray(value)) { // obj对象中的key是数组的情况 收集数组元素的依赖
             dependArray(value)
           }
@@ -195,7 +195,7 @@ export function defineReactive (
       } else {
         val = newVal
       }
-      childOb = !shallow && observe(newVal)
+      childOb = !shallow && observe(newVal)  // 对新设置的值进行观测
       dep.notify()
     }
   })
@@ -205,6 +205,7 @@ export function defineReactive (
  * Set a property on an object. Adds the new property and
  * triggers change notification if the property doesn't
  * already exist.
+ * 设置属性。当属性不存在时，给对象增加属性，并通知对象观察者。
  */
 export function set (target: Array<any> | Object, key: any, val: any): any {
   if (process.env.NODE_ENV !== 'production' &&
@@ -232,17 +233,18 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
     )
     return val
   }
-  if (!ob) {
+  if (!ob) { // target不是响应式对象
     target[key] = val
     return val
   }
   defineReactive(ob.value, key, val) // 保证新添加的属性是响应式的
-  ob.dep.notify()
+  ob.dep.notify() // 通知target对象的观察者
   return val
 }
 
 /**
  * Delete a property and trigger change if necessary.
+ * 删除属性，并通知观察者
  */
 export function del (target: Array<any> | Object, key: any) {
   if (process.env.NODE_ENV !== 'production' &&

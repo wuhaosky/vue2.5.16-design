@@ -69,7 +69,7 @@ export function isRegExp (v: any): boolean {
  */
 export function isValidArrayIndex (val: any): boolean {
   const n = parseFloat(String(val))
-  return n >= 0 && Math.floor(n) === n && isFinite(val)
+  return n >= 0 && Math.floor(n) === n && isFinite(val)   // 全局 isFinite() 函数用来判断被传入的参数值是否为一个有限数值
 }
 
 /**
