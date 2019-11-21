@@ -41,7 +41,7 @@ export function toggleObserving (value: boolean) {
 export class Observer {
   value: any; // 被观测对象的引用
   dep: Dep;   // 依赖收集器
-  vmCount: number; // number of vms that has this object as root $data
+  vmCount: number; // number of vms that has this object as root $data  使用当前ob实例作为vue组件$data属性的观测对象的个数
 
   constructor (value: any) {
     this.value = value
@@ -51,7 +51,7 @@ export class Observer {
     if (Array.isArray(value)) { // 如果被观测对象是数组，则覆写数组的变异方法，目的是拦截数组的数据变化
       const augment = hasProto
         ? protoAugment          // 如果支持__proto__，则覆写数组的原型为我们的数组变异方法
-        : copyAugment           // 如果不支持__proto__，则把我们的数组变异方法当做属性添加到数组中
+        : copyAugment           // 如果不支持__proto__，则把我们的数组变异方法当做数据属性添加到数组上，并且是不可枚举的
       augment(value, arrayMethods, arrayKeys)
       this.observeArray(value)
     } else {                    // 如果被观测对象是对象
@@ -99,6 +99,7 @@ function protoAugment (target, src: Object, keys: any) {
 /**
  * Augment an target Object or Array by defining
  * hidden properties.
+ * 如果不支持__proto__，则把我们的数组变异方法当做数据属性添加到数组上，并且是不可枚举的
  */
 /* istanbul ignore next */
 function copyAugment (target: Object, src: Object, keys: Array<string>) {
@@ -115,7 +116,7 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
  * 为value创建Observer，并返回
  */
 export function observe (value: any, asRootData: ?boolean): Observer | void {
-  if (!isObject(value) || value instanceof VNode) {
+  if (!isObject(value) || value instanceof VNode) { // value不是对象或者数组，或者是VNode，则直接返回
     return
   }
   let ob: Observer | void
@@ -145,12 +146,12 @@ export function defineReactive (
   key: string,
   val: any,
   customSetter?: ?Function,
-  shallow?: boolean
+  shallow?: boolean   // 是否为浅层观测，默认为深层观测
 ) {
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
-  if (property && property.configurable === false) {
+  if (property && property.configurable === false) {  // 属性是不可配置的，则直接return
     return
   }
 
@@ -162,6 +163,7 @@ export function defineReactive (
   const setter = property && property.set
 
   let childOb = !shallow && observe(val) // 默认为深度观测
+  // 定义访问器属性
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
