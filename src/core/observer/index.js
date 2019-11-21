@@ -16,7 +16,7 @@ import {
   isServerRendering
 } from '../util/index'
 
-const arrayKeys = Object.getOwnPropertyNames(arrayMethods)
+const arrayKeys = Object.getOwnPropertyNames(arrayMethods)  // Object.getOwnPropertyNames()方法返回一个由指定对象的所有自身属性的属性名（包括不可枚举属性但不包括Symbol值作为名称的属性）组成的数组。
 
 /**
  * In some cases we may want to disable observation inside a component's
@@ -24,6 +24,9 @@ const arrayKeys = Object.getOwnPropertyNames(arrayMethods)
  */
 export let shouldObserve: boolean = true
 
+/**
+ * 是否开启观测
+ */
 export function toggleObserving (value: boolean) {
   shouldObserve = value
 }
@@ -45,10 +48,10 @@ export class Observer {
     this.dep = new Dep()
     this.vmCount = 0
     def(value, '__ob__', this)  // 定义__ob__为被观测对象的属性，__ob__的Value是Observer对象，__ob__是不可枚举的
-    if (Array.isArray(value)) { // 如果被观测对象是数组
+    if (Array.isArray(value)) { // 如果被观测对象是数组，则覆写数组的变异方法，目的是拦截数组的数据变化
       const augment = hasProto
-        ? protoAugment
-        : copyAugment
+        ? protoAugment          // 如果支持__proto__，则覆写数组的原型为我们的数组变异方法
+        : copyAugment           // 如果不支持__proto__，则把我们的数组变异方法当做属性添加到数组中
       augment(value, arrayMethods, arrayKeys)
       this.observeArray(value)
     } else {                    // 如果被观测对象是对象
