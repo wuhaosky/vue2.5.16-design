@@ -173,8 +173,8 @@ export function defineReactive (
         dep.depend() // 触发时机是val被修改时触发，即在 set 访问器方法中触发
         if (childOb) {
           childOb.dep.depend()  // 触发时机是val添加、删除属性时触发，即在 Vue.set 或 Vue.delete 方法中触发
-          if (Array.isArray(value)) { // obj对象中的key是数组的情况 收集数组元素的依赖
-            dependArray(value)
+          if (Array.isArray(value)) { // obj对象中的key对应的val是数组的情况 收集数组所有元素的依赖
+            dependArray(value) // 依赖了数组 arr 就等价于依赖了数组内的所有元素，数组内所有元素的改变都可以看做是数组的改变
           }
         }
       }
@@ -277,6 +277,8 @@ export function del (target: Array<any> | Object, key: any) {
 /**
  * Collect dependencies on array elements when the array is touched, since
  * we cannot intercept array element access like property getters.
+ * 数组的索引是非响应式的
+ * 依赖了数组就等价于依赖了数组内的所有元素，数组内所有元素的改变都可以看做是数组的改变
  */
 function dependArray (value: Array<any>) {
   for (let e, i = 0, l = value.length; i < l; i++) {
