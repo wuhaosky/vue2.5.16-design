@@ -22,6 +22,7 @@ let index = 0
 
 /**
  * Reset the scheduler's state.
+ * 变量重置
  */
 function resetSchedulerState () {
   index = queue.length = activatedChildren.length = 0
@@ -34,6 +35,7 @@ function resetSchedulerState () {
 
 /**
  * Flush both queues and run the watchers.
+ * 运行队列里的所有watchers的run方法
  */
 function flushSchedulerQueue () {
   flushing = true
