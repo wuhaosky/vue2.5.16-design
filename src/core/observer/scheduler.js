@@ -49,10 +49,16 @@ function flushSchedulerQueue () {
   //    user watchers are created before the render watcher)
   // 3. If a component is destroyed during a parent component's watcher run,
   //    its watchers can be skipped.
+  // 根据观察者id进行升序排序
+  // 按照升序依次更新可以保证：
+  // 1.从父组件到子组件依次更新
+  // 2.用户watcher更新先于渲染函数watcher更新
+  // 3.如果在父组件的观察者执行过程中，子组件被销毁，则子组件的观察者会被跳过
   queue.sort((a, b) => a.id - b.id)
 
   // do not cache length because more watchers might be pushed
   // as we run existing watchers
+  // 在我们执行queue队列时，可能会有新的观察者被加进来
   for (index = 0; index < queue.length; index++) {
     watcher = queue[index]
     id = watcher.id
@@ -62,6 +68,7 @@ function flushSchedulerQueue () {
     if (process.env.NODE_ENV !== 'production' && has[id] != null) {
       circular[id] = (circular[id] || 0) + 1
       if (circular[id] > MAX_UPDATE_COUNT) {
+        // 任意观察者在一次tick中，被更新次数超过100次，则打印无限循环警告
         warn(
           'You may have an infinite update loop ' + (
             watcher.user
@@ -92,6 +99,9 @@ function flushSchedulerQueue () {
   }
 }
 
+/**
+ * 如果观察者是vue组件的render函数的观察者，则执行vue组件的update生命周期钩子
+ */
 function callUpdatedHooks (queue) {
   let i = queue.length
   while (i--) {
@@ -136,6 +146,8 @@ export function queueWatcher (watcher: Watcher) {
     } else { // flushing 为真时，说明队列正在执行更新，这时如果有观察者入队则会执行 else 分支中的代码，这段代码的作用是为了保证观察者的执行顺序
       // if already flushing, splice the watcher based on its id
       // if already past its id, it will be run next immediately.
+      // 如果当前观察者的id小于当前正在执行的观察者的id，则把当前观察者插入到queue队列的尾部
+      // 如果当前观察者的id大于当前正在执行的观察者的id，则把当前观察者按照id升序插入到正在执行的queue中
       let i = queue.length - 1
       while (i > index && queue[i].id > watcher.id) {
         i--
