@@ -34,6 +34,9 @@ let useMacroTask = false
 // in IE. The only polyfill that consistently queues the callback after all DOM
 // events triggered in the same loop is by using MessageChannel.
 /* istanbul ignore if */
+// Vue中对于 macro task 的实现，优先检测是否支持原生 setImmediate，
+// 这是一个高版本 IE 和 Edge 才支持的特性，不支持的话再去检测是否支持原生的MessageChannel，
+// 如果也不支持的话就会降级为 setTimeout 0
 if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
   macroTimerFunc = () => {
     setImmediate(flushCallbacks)
