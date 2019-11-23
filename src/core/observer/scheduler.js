@@ -139,7 +139,7 @@ function callActivatedHooks (queue) {
  */
 export function queueWatcher (watcher: Watcher) {
   const id = watcher.id
-  if (has[id] == null) { // has 的作用就是用来避免将相同的观察者重复入队的
+  if (has[id] == null) { // has 的作用就是用来避免将相同的观察者重复入队列的
     has[id] = true
     if (!flushing) { // 正在刷新标识，true为正在刷新，false为此时没有刷新
       queue.push(watcher)
