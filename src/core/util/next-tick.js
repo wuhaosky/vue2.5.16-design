@@ -61,6 +61,8 @@ if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
 
 // Determine microtask defer implementation.
 /* istanbul ignore next, $flow-disable-line */
+// Vue中对于 microtask 的实现，优先检测是否原生支持Promise，如果支持，则完美。
+// 如果不支持，可使用macroTimerFunc替换microTimerFunc。
 if (typeof Promise !== 'undefined' && isNative(Promise)) { // 检测当前宿主环境是否支持原生的 Promise，如果支持则优先使用 Promise 注册 microtask
   const p = Promise.resolve()
   microTimerFunc = () => { // microTimerFunc 定义为一个函数，这个函数的执行将会把 flushCallbacks 函数注册为 microtask
