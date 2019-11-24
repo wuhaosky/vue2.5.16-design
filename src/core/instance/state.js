@@ -184,7 +184,7 @@ function initComputed (vm: Component, computed: Object) {
 
     if (!isSSR) {
       // create internal watcher for the computed property.
-      watchers[key] = new Watcher( // 创建计算属性的观察者，当依赖改变时，会把watcher.dity设置为true，意味着需要重新计算。
+      watchers[key] = new Watcher( // 创建计算属性的观察者，当依赖改变时，会把watcher.dity设置为true，意味着计算属性的值需要重新计算。
         vm,
         getter || noop,
         noop,
@@ -255,8 +255,8 @@ function createComputedGetter (key) {
       if (watcher.dirty) {
         watcher.evaluate()
       }
-      if (Dep.target) {
-        watcher.depend()
+      if (Dep.target) {   // 此时，Dep.target是渲染函数观察者
+        watcher.depend()  // 计算属性依赖的属性的dep收集渲染函数观察者（当计算属性依赖的属性发生变化，便会通知渲染函数观察者）
       }
       return watcher.value
     }
