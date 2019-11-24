@@ -184,7 +184,7 @@ function initComputed (vm: Component, computed: Object) {
 
     if (!isSSR) {
       // create internal watcher for the computed property.
-      watchers[key] = new Watcher( // 创建计算属性的观察者
+      watchers[key] = new Watcher( // 创建计算属性的观察者，当依赖改变时，会把watcher.dity设置为true，意味着需要重新计算。
         vm,
         getter || noop,
         noop,
@@ -207,6 +207,10 @@ function initComputed (vm: Component, computed: Object) {
   }
 }
 
+/**
+  定义计算属性get、set方法，只能读不能写；
+  并且把计算属性代理到vm上
+*/
 export function defineComputed (
   target: any,
   key: string,
@@ -240,6 +244,10 @@ export function defineComputed (
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
+/**
+ * 计算属性 只要watcher.dirty为false，就不会重新求值，而是使用上次求得的值；
+ * 重新求值发生在，计算属性第一次调用，和它的依赖属性改变时。
+ */
 function createComputedGetter (key) {
   return function computedGetter () {
     const watcher = this._computedWatchers && this._computedWatchers[key]
