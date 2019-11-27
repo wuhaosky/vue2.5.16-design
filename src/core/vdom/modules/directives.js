@@ -110,7 +110,7 @@ function normalizeDirectives (
       dir.modifiers = emptyModifiers
     }
     res[getRawDirName(dir)] = dir
-    dir.def = resolveAsset(vm.$options, 'directives', dir.name, true) // 自定义指令的钩子函数
+    dir.def = resolveAsset(vm.$options, 'directives', dir.name, true) // 在运行时设置指令的钩子函数
   }
   // $flow-disable-line
   return res

@@ -26,7 +26,7 @@ Vue.config.isReservedAttr = isReservedAttr
 Vue.config.getTagNamespace = getTagNamespace
 Vue.config.isUnknownElement = isUnknownElement
 
-// install platform runtime directives & components 安装平台特定的指令和组件
+// install platform runtime directives & components 安装平台特定的指令和组件到Vue.options
 extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 // 变为

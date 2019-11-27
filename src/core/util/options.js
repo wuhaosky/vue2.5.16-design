@@ -156,6 +156,8 @@ LIFECYCLE_HOOKS.forEach(hook => {
  * When a vm is present (instance creation), we need to do
  * a three-way merge between constructor options, instance
  * options and parent options.
+ * 对于 directives、filters 以及 components 等资源选项，父子选项将以原型链的形式被处理，
+ * 正是因为这样我们才能够在任何地方都使用内置组件、指令等。
  */
 function mergeAssets (
   parentVal: ?Object,

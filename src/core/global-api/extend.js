@@ -38,7 +38,15 @@ export function initExtend (Vue: GlobalAPI) {
     Sub.cid = cid++
     Sub.options = mergeOptions(
       Super.options,
+      // Super.options 就是 Vue.options
+      // {
+      //   components: {KeepAlive: {…}, Transition: {…}, TransitionGroup: {…}}
+      //   directives: {model: {…}, show: {…}}
+      //   filters: {}
+      //   _base: ƒ Vue(options)
+      // }
       extendOptions
+      // extendOption是webpack处理后的vue组件的选项对象
     )
     Sub['super'] = Super
 
