@@ -18,17 +18,17 @@ declare type MountedComponentVNode = {
 
 // interface for vnodes in update modules
 declare type VNodeWithData = {
-  tag: string;
-  data: VNodeData;
-  children: ?Array<VNode>;
-  text: void;
-  elm: any;
+  tag: string;                                   // 标签名
+  data: VNodeData;                               // VNodeData 包含大多数vnode信息
+  children: ?Array<VNode>;                       // 子VNode
+  text: void;                                    // 文本
+  elm: any;                                      // dom元素
   ns: string | void;
-  context: Component;
-  key: string | number | void;
-  parent?: VNodeWithData; // _render函数里，建立Vue组件的VNode之间的单向父子关系，只能子组件VNode找到父组件VNode
-  componentOptions?: VNodeComponentOptions;
-  componentInstance?: Component;  // vue组件的实例
+  context: Component;                            //
+  key: string | number | void;                   // key diff算法使用
+  parent?: VNodeWithData;                        // _render函数里，建立Vue组件的VNode之间的单向父子关系，只能子组件VNode找到父组件VNode
+  componentOptions?: VNodeComponentOptions;      // vue组件选项
+  componentInstance?: Component;                 // vue组件的实例
   isRootInsert: boolean;
 };
 
