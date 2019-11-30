@@ -7,16 +7,13 @@ let index = 0
 function flushSchedulerQueue () {
   flushing = true
   let watcher, id
-
   queue.sort((a, b) => a.id - b.id)
-
   for (index = 0; index < queue.length; index++) {
     watcher = queue[index]
     id = watcher.id
     has[id] = null
     watcher.run()
   }
-
   index = queue.length = 0
   has = {}
   waiting = flushing = false
