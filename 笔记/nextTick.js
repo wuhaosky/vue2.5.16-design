@@ -58,3 +58,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
     microTimerFunc()
   }
 }
+
+Vue.prototype.$nextTick = function (fn: Function) {
+  return nextTick(fn, this)
+}
