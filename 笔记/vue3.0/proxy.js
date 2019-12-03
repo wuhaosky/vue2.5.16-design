@@ -43,14 +43,24 @@ let proxyTestData = new Proxy(testData, {
 
 
 
-let shopId = proxyTestData.shopId;
-let deals = proxyTestData.deals;
-proxyTestData.shopName = "美团"
-proxyTestData.shopId = 123456;
-proxyTestData.deals.push("213")
-proxyTestData.deals[0] = "456"
-proxyTestData.deals.length = 1
-delete proxyTestData.shopId;
-console.log('shopId' in proxyTestData)
-console.log(Object.keys(proxyTestData))
-console.log(testData)
+// let shopId = proxyTestData.shopId;
+// let deals = proxyTestData.deals;
+// proxyTestData.shopName = "美团"
+// proxyTestData.shopId = 123456;
+// proxyTestData.deals.push("213")
+// proxyTestData.deals[0] = "456"
+// proxyTestData.deals.length = 1
+// delete proxyTestData.shopId;
+// console.log('shopId' in proxyTestData)
+// console.log(Object.keys(proxyTestData))
+// console.log(testData)
+// proxyTestData.shopInfo = {
+//   shopName: "美团",
+//   detail: "开水团",
+//   address: "申亚",
+//   employee: ["张三", "李四"]
+// }
+// proxyTestData.shopInfo['employee'][1] = "王五"
+// proxyTestData.shopInfo['employee'].push("赵六")
+// proxyTestData.deals.push("321")
+// console.log(testData)
