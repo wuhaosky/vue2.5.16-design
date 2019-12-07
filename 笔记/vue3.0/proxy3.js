@@ -14,6 +14,8 @@ class Observables{
     handler = {
       set(target, key, value, receiver){
         console.log('检测到了set的key为 -> ' + key);
+        console.log(receiver);
+        console.log(receiver == ob);
         return Reflect.set(target, key, value, receiver);
       }
     }
